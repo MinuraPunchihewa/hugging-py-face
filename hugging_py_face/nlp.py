@@ -4,7 +4,7 @@ from .config_parser import ConfigParser
 
 
 class NLP:
-    def __int__(self, api_token):
+    def __init__(self, api_token):
         self.api_token = api_token
 
         config_parser = ConfigParser()
