@@ -31,4 +31,4 @@ class NLP:
         return json.loads(response.content.decode("utf-8"))
 
     def text_classification(self, inputs, options=None, model=None):
-        return self._query(inputs, options=options, model=None, task='text-classification')
+        return self._query(inputs, options=options, model=model, task='text-classification')
