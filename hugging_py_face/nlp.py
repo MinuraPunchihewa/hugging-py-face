@@ -55,6 +55,16 @@ class NLP:
         return self._query(text, parameters=parameters, options=options, model=model, task='summarization')
 
     def question_answering(self, question: Text, context: Text, model: Text = None):
+        """
+        Answer a question using the provided context.
+
+        :param question: a string of the question to be answered.
+        :param context: a string of context.
+        :param model: the model to use for the question answering task. If not provided, the recommended model from Hugging Face will be used.
+        :return: a dict of the answer.
+
+        # TODO: check if questions can be answered without context
+        """
         return self._query(
             {
                 "question": question,
