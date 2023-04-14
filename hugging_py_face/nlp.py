@@ -54,6 +54,16 @@ class NLP:
         """
         return self._query(inputs, parameters=parameters, options=options, model=model, task='summarization')
 
+    def question_answering(self, question: Text, context: Text, model: Text = None):
+        return self._query(
+            {
+                "question": question,
+                "context": context
+            },
+            model=model,
+            task='question-answering'
+        )
+
     def text_classification(self, inputs: Union[Text, List], options: Dict = None, model: Text = None) -> Dict:
         """
         Analyze the sentiment of a string or a list of strings.
