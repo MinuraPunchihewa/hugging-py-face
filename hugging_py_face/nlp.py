@@ -1,5 +1,6 @@
 import json
 import requests
+from typing import Text, List, Dict, Union
 from .config_parser import ConfigParser
 
 
@@ -10,7 +11,7 @@ class NLP:
         config_parser = ConfigParser()
         self.config = config_parser.get_config_dict()
 
-    def _query(self, inputs, parameters=None, options=None, model=None, task=None):
+    def _query(self, inputs: Union[Text, List, Dict], parameters: Dict = None, options: Dict = None, model: Text = None, task: Text = None) -> Dict:
         api_url = f"{self.config['BASE_URL']}/{model if model is not None else self.config['TASK_MODEL_MAP'][task]}"
 
         headers = {
@@ -30,5 +31,5 @@ class NLP:
         response = requests.request("POST", api_url, headers=headers, data=json.dumps(data))
         return json.loads(response.content.decode("utf-8"))
 
-    def text_classification(self, inputs, options=None, model=None):
+    def text_classification(self, inputs: Union[Text, List], options: Dict = None, model: Text = None) -> Dict:
         return self._query(inputs, options=options, model=model, task='text-classification')
