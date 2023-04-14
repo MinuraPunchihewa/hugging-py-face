@@ -31,5 +31,11 @@ class NLP:
         response = requests.request("POST", api_url, headers=headers, data=json.dumps(data))
         return json.loads(response.content.decode("utf-8"))
 
+    def fill_mask(self, inputs: Union[Text, List], options: Dict = None, model: Text = None) -> Dict:
+        return self._query(inputs, options=options, model=model, task='fill-mask')
+
+    def summarization(self, inputs: Union[Text, List], parameters: Dict = None, options: Dict = None, model: Text = None) -> Dict:
+        return self._query(inputs, parameters=parameters, options=options, model=model, task='summarization')
+
     def text_classification(self, inputs: Union[Text, List], options: Dict = None, model: Text = None) -> Dict:
         return self._query(inputs, options=options, model=model, task='text-classification')
