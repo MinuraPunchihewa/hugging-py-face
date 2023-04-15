@@ -8,7 +8,7 @@ class ComputerVision(MultimediaProcessing):
     def __init__(self, api_token):
         super().__init__(api_token)
 
-    def image_classification(self, input: Text, model: Optional[Text] = None) -> Dict:
+    def image_classification(self, input: Text, model: Optional[Text] = None) -> List:
         """
         :param input:
         :param model:
