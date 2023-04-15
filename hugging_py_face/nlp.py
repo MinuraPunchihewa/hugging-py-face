@@ -137,3 +137,33 @@ class NLP:
             model=model,
             task='zero-shot-classification'
         )
+
+    def conversational(self, text: Union[Text, List], past_user_inputs: Text = None, generated_responses: Text = None, parameters: Optional[Dict] = None, options: Dict = None, model: Text = None) -> Dict:
+        """
+        Corresponds to any chatbot like structure: pass in some text along with the past_user_inputs and generated_responses to receive a response.
+
+        :param text: a string or list of strings representing the last input(s) from the user in the conversation.
+        :param past_user_inputs: a list of strings corresponding to the earlier replies from the user. Should be of the same length of generated_responses. Each response from the bot will contain past_user_inputs previously passed into the model.
+        :param generated_responses: a list of strings corresponding to the earlier replies from the model. Each response from the bot will contain generated_responses from earlier replies from the model.
+        :param parameters: a dict of parameters. For more information, see the `detailed parameters for the conversational task <https://huggingface.co/docs/api-inference/detailed_parameters#conversational-task>`_.
+        :param options: a dict of options. For more information, see the `detailed parameters for the conversational task <https://huggingface.co/docs/api-inference/detailed_parameters#conversational-task>`_.
+        :param model: the model to use for the conversational task. If not provided, the recommended model from Hugging Face will be used.
+        :return: a dict or a list of dicts containing the response(s) from the bot.
+        """
+        inputs = {
+            'text': text
+        }
+
+        if past_user_inputs is not None:
+            inputs['past_user_inputs'] = past_user_inputs
+
+        if generated_responses is not None:
+            inputs['generated_responses'] = generated_responses
+
+        return self._query(
+            inputs,
+            parameters=parameters,
+            options=options,
+            model=model,
+            task='conversational'
+        )
