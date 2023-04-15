@@ -104,3 +104,15 @@ class NLP:
         :return: a dict or a list of dicts indicating the sentiment of the string(s).
         """
         return self._query(text, options=options, model=model, task='text-classification')
+
+    def text_generation(self, text: Union[Text, List], parameters: Optional[Dict] = None, options: Dict = None, model: Text = None) -> Dict:
+        """
+        Continue text from a prompt.
+
+        :param text: a string to be generated from.
+        :param parameters: a dict of parameters. For more information, see the `detailed parameters for the text generation task <https://huggingface.co/docs/api-inference/detailed_parameters#text-generation-task>`_.
+        :param options: a dict of options. For more information, see the `detailed parameters for the text generation task <https://huggingface.co/docs/api-inference/detailed_parameters#text-generation-task>`_.
+        :param model: the model to use for the text generation task. If not provided, the recommended model from Hugging Face will be used.
+        :return: a dict or a list of dicts containing the generated text.
+        """
+        return self._query(text, parameters=parameters, options=options, model=model, task='text-classification')
