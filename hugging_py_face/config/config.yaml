@@ -7,3 +7,4 @@ TASK_MODEL_MAP:
   text-classification: distilbert-base-uncased-finetuned-sst-2-english
   text-generation: gpt2
   zero-shot-classification: facebook/bart-large-mnli
+  conversational: microsoft/DialoGPT-large
