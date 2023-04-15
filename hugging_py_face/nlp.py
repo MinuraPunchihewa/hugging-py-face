@@ -11,7 +11,7 @@ class NLP:
         config_parser = ConfigParser()
         self.config = config_parser.get_config_dict()
 
-    def _query(self, inputs: Union[Text, List, Dict], parameters: Optional[Dict] = None, options: Optional[Dict] = None, model: Optional[Text] = None, task: Optional[Text] = None) -> Dict:
+    def _query(self, inputs: Union[Text, List, Dict], parameters: Optional[Dict] = None, options: Optional[Dict] = None, model: Optional[Text] = None, task: Optional[Text] = None) -> Union[Dict, List]:
         api_url = f"{self.config['BASE_URL']}/{model if model is not None else self.config['TASK_MODEL_MAP'][task]}"
 
         headers = {
@@ -31,7 +31,7 @@ class NLP:
         response = requests.request("POST", api_url, headers=headers, data=json.dumps(data))
         return json.loads(response.content.decode("utf-8"))
 
-    def fill_mask(self, text: Union[Text, List], options: Optional[Dict] = None, model: Optional[Text] = None) -> Dict:
+    def fill_mask(self, text: Union[Text, List], options: Optional[Dict] = None, model: Optional[Text] = None) -> List:
         """
         Fill in a masked portion(token) of a string or a list of strings.
 
@@ -42,7 +42,7 @@ class NLP:
         """
         return self._query(text, options=options, model=model, task='fill-mask')
 
-    def summarization(self, text: Union[Text, List], parameters: Optional[Dict] = None, options: Optional[Dict] = None, model: Optional[Text] = None) -> Dict:
+    def summarization(self, text: Union[Text, List], parameters: Optional[Dict] = None, options: Optional[Dict] = None, model: Optional[Text] = None) -> Union[Dict, List]:
         """
         Summarize a string or a list of strings.
 
@@ -54,7 +54,7 @@ class NLP:
         """
         return self._query(text, parameters=parameters, options=options, model=model, task='summarization')
 
-    def question_answering(self, question: Text, context: Text, model: Optional[Text] = None):
+    def question_answering(self, question: Text, context: Text, model: Optional[Text] = None) -> Dict:
         """
         Answer a question using the provided context.
 
@@ -74,7 +74,7 @@ class NLP:
             task='question-answering'
         )
 
-    def sentence_similarity(self, source_sentence: Text, sentences: List, options: Optional[Dict] = None, model: Optional[Text] = None) -> Dict:
+    def sentence_similarity(self, source_sentence: Text, sentences: List, options: Optional[Dict] = None, model: Optional[Text] = None) -> List:
         """
         Calculate the semantic similarity between one text and a list of other sentences by comparing their embeddings.
 
@@ -94,7 +94,7 @@ class NLP:
             task='sentence-similarity'
         )
 
-    def text_classification(self, text: Union[Text, List], options: Optional[Dict] = None, model: Optional[Text] = None) -> Dict:
+    def text_classification(self, text: Union[Text, List], options: Optional[Dict] = None, model: Optional[Text] = None) -> Union[Dict, List]:
         """
         Analyze the sentiment of a string or a list of strings.
 
@@ -105,7 +105,7 @@ class NLP:
         """
         return self._query(text, options=options, model=model, task='text-classification')
 
-    def text_generation(self, text: Union[Text, List], parameters: Optional[Dict] = None, options: Optional[Dict] = None, model: Optional[Text] = None) -> Dict:
+    def text_generation(self, text: Union[Text, List], parameters: Optional[Dict] = None, options: Optional[Dict] = None, model: Optional[Text] = None) -> Union[Dict, List]:
         """
         Continue text from a prompt.
 
@@ -117,7 +117,7 @@ class NLP:
         """
         return self._query(text, parameters=parameters, options=options, model=model, task='text-generation')
 
-    def zero_shot_classification(self, text: Union[Text, List], candidate_labels: List, parameters: Optional[Dict] = {}, options: Optional[Dict] = None, model: Optional[Text] = None) -> Dict:
+    def zero_shot_classification(self, text: Union[Text, List], candidate_labels: List, parameters: Optional[Dict] = {}, options: Optional[Dict] = None, model: Optional[Text] = None) -> Union[Dict, List]:
         """
         Classify a sentence/paragraph to one of the candidate labels provided.
 
@@ -138,7 +138,7 @@ class NLP:
             task='zero-shot-classification'
         )
 
-    def conversational(self, text: Union[Text, List], past_user_inputs: Optional[Text] = None, generated_responses: Optional[Text] = None, parameters: Optional[Dict] = None, options: Optional[Dict] = None, model: Optional[Text] = None) -> Dict:
+    def conversational(self, text: Union[Text, List], past_user_inputs: Optional[Text] = None, generated_responses: Optional[Text] = None, parameters: Optional[Dict] = None, options: Optional[Dict] = None, model: Optional[Text] = None) -> Union[Dict, List]:
         """
         Corresponds to any chatbot like structure: pass in some text along with the past_user_inputs and generated_responses to receive a response.
 
@@ -168,7 +168,7 @@ class NLP:
             task='conversational'
         )
 
-    def feature_extraction(self, text: Union[Text, List], options: Optional[Dict] = None, model: Optional[Text] = None) -> Dict:
+    def feature_extraction(self, text: Union[Text, List], options: Optional[Dict] = None, model: Optional[Text] = None) -> Union[Dict, List]:
         """
         Reads some text and outputs raw float values, that are usually consumed as part of a semantic database/semantic search.
 
