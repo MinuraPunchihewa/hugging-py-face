@@ -8,3 +8,4 @@ TASK_MODEL_MAP:
   text-generation: gpt2
   zero-shot-classification: facebook/bart-large-mnli
   conversational: microsoft/DialoGPT-large
+  feature-extraction: sentence-transformers/paraphrase-xlm-r-multilingual-v1
