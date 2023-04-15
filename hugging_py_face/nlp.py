@@ -119,7 +119,7 @@ class NLP:
 
     def zero_shot_classification(self, text: Union[Text, List], candidate_labels: List, parameters: Optional[Dict] = {}, options: Dict = None, model: Text = None) -> Dict:
         """
-        Pass a sentence/paragraph and the possible labels for that sentence, and you get a result.
+        Classify a sentence/paragraph to one of the candidate labels provided.
 
         :param text: a string or list of strings to be classified.
         :param candidate_labels: a list of strings that are potential classes for inputs.
