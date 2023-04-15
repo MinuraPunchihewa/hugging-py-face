@@ -115,4 +115,4 @@ class NLP:
         :param model: the model to use for the text generation task. If not provided, the recommended model from Hugging Face will be used.
         :return: a dict or a list of dicts containing the generated text.
         """
-        return self._query(text, parameters=parameters, options=options, model=model, task='text-classification')
+        return self._query(text, parameters=parameters, options=options, model=model, task='text-generation')
