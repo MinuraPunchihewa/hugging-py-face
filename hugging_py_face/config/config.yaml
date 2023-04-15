@@ -10,3 +10,4 @@ TASK_MODEL_MAP:
   conversational: microsoft/DialoGPT-large
   feature-extraction: sentence-transformers/paraphrase-xlm-r-multilingual-v1
   image-classification: google/vit-base-patch16-224
+  object-detection: facebook/detr-resnet-50
