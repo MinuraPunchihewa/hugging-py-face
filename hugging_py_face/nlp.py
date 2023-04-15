@@ -74,6 +74,26 @@ class NLP:
             task='question-answering'
         )
 
+    def sentence_similarity(self, source_sentence: Text, sentences: List, options: Dict = None, model: Text = None) -> Dict:
+        """
+        Calculate the semantic similarity between one text and a list of other sentences by comparing their embeddings.
+
+        :param source_sentence: the string that you wish to compare the other strings with.
+        :param sentences: a list of strings which will be compared against the source_sentence.
+        :param options: a dict of options. For more information, see the `detailed parameters for the sentence similarity task <https://huggingface.co/docs/api-inference/detailed_parameters#sentence-similarity-task>`_.
+        :param model: the model to use for the sentence similarity task. If not provided, the recommended model from Hugging Face will be used.
+        :return: a dict or a list of dicts indicating the sentiment of the string(s).
+        """
+        return self._query(
+            {
+                "source_sentence": source_sentence,
+                "sentences": sentences
+            },
+            options=options,
+            model=model,
+            task='sentence-similarity'
+        )
+
     def text_classification(self, text: Union[Text, List], options: Dict = None, model: Text = None) -> Dict:
         """
         Analyze the sentiment of a string or a list of strings.
