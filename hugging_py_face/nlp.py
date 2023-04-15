@@ -82,7 +82,7 @@ class NLP:
         :param sentences: a list of strings which will be compared against the source_sentence.
         :param options: a dict of options. For more information, see the `detailed parameters for the sentence similarity task <https://huggingface.co/docs/api-inference/detailed_parameters#sentence-similarity-task>`_.
         :param model: the model to use for the sentence similarity task. If not provided, the recommended model from Hugging Face will be used.
-        :return: a dict or a list of dicts indicating the sentiment of the string(s).
+        :return: a list of similarity scores.
         """
         return self._query(
             {
