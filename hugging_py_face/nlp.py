@@ -167,3 +167,14 @@ class NLP:
             model=model,
             task='conversational'
         )
+
+    def feature_extraction(self, text: Union[Text, List], options: Dict = None, model: Text = None) -> Dict:
+        """
+        Reads some text and outputs raw float values, that are usually consumed as part of a semantic database/semantic search.
+
+        :param text: a string or a list of strings to get the features from.
+        :param options: a dict of options. For more information, see the `detailed parameters for the feature extraction task <https://huggingface.co/docs/api-inference/detailed_parameters#feature-extraction-task>`_.
+        :param model: the model to use for the feature extraction task. If not provided, the recommended model from Hugging Face will be used.
+        :return: a list of dicts or a list of lists (of dicts) containing the representation of the features of the input(s).
+        """
+        return self._query(text, options=options, model=model, task='feature-extraction')
