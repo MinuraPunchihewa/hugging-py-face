@@ -116,3 +116,24 @@ class NLP:
         :return: a dict or a list of dicts containing the generated text.
         """
         return self._query(text, parameters=parameters, options=options, model=model, task='text-generation')
+
+    def zero_shot_classification(self, text: Union[Text, List], candidate_labels: List, parameters: Optional[Dict] = {}, options: Dict = None, model: Text = None) -> Dict:
+        """
+        Pass a sentence/paragraph and the possible labels for that sentence, and you get a result.
+
+        :param text: a string or list of strings to be classified.
+        :param candidate_labels: a list of strings that are potential classes for inputs.
+        :param parameters: a dict of parameters excluding candidate_labels which is passed in as a separate argument. For more information, see the `detailed parameters for the zero shot classification task <https://huggingface.co/docs/api-inference/detailed_parameters#zeroshot-classification-task>`_.
+        :param options: a dict of options. For more information, see the `detailed parameters for the zero shot classification task <https://huggingface.co/docs/api-inference/detailed_parameters#zeroshot-classification-task>`_.
+        :param model: the model to use for the zero shot classification task. If not provided, the recommended model from Hugging Face will be used.
+        :return: a dict or a list of dicts containing the labels and the corresponding the probability of each label.
+        """
+        parameters['candidate_labels'] = candidate_labels
+
+        return self._query(
+            text,
+            parameters=parameters,
+            options=options,
+            model=model,
+            task='zero-shot-classification'
+        )
