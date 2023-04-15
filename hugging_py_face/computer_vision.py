@@ -1,8 +1,17 @@
 import json
 import requests
 from typing import Text, List, Dict, Optional, Union
-from .config_parser import ConfigParser
+from .multimedia_processing import MultimediaProcessing
 
 
-class ComputerVision:
-    pass
+class ComputerVision(MultimediaProcessing):
+    def __init__(self, api_token):
+        super().__init__(api_token)
+
+    def image_classification(self, input: Text, model: Optional[Text] = None) -> Dict:
+        """
+        :param input:
+        :param model:
+        :return:
+        """
+        return self._query(input, model=model, task="image-classification")
