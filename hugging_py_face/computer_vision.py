@@ -15,3 +15,11 @@ class ComputerVision(MultimediaProcessing):
         :return:
         """
         return self._query(input, model=model, task="image-classification")
+
+    def object_detection(self, input: Text, model: Optional[Text] = None) -> List:
+        """
+        :param input:
+        :param model:
+        :return:
+        """
+        return self._query(input, model=model, task="object-detection")
