@@ -12,3 +12,4 @@ TASK_MODEL_MAP:
   image-classification: google/vit-base-patch16-224
   object-detection: facebook/detr-resnet-50
   speech-recognition: facebook/wav2vec2-base-960h
+  audio-classification: superb/hubert-large-superb-er
