@@ -1,6 +1,6 @@
 import json
 import requests
-from typing import Text, Dict, Optional
+from typing import Text, Dict, List, Optional, Union
 from .config_parser import ConfigParser
 
 
@@ -11,7 +11,7 @@ class MultimediaProcessing:
         config_parser = ConfigParser()
         self.config = config_parser.get_config_dict()
 
-    def _query(self, input: Text, model: Optional[Text] = None, task: Optional[Text] = None) -> Dict:
+    def _query(self, input: Text, model: Optional[Text] = None, task: Optional[Text] = None) -> Union[Dict, List]:
         api_url = f"{self.config['BASE_URL']}/{model if model is not None else self.config['TASK_MODEL_MAP'][task]}"
 
         headers = {
