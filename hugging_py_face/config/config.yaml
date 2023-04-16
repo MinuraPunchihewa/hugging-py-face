@@ -1,0 +1,15 @@
+BASE_URL: https://api-inference.huggingface.co/models
+TASK_MODEL_MAP:
+  fill-mask: bert-base-uncased
+  summarization: facebook/bart-large-cnn
+  question-answering: deepset/roberta-base-squad2
+  sentence-similarity: sentence-transformers/all-MiniLM-L6-v2
+  text-classification: distilbert-base-uncased-finetuned-sst-2-english
+  text-generation: gpt2
+  zero-shot-classification: facebook/bart-large-mnli
+  conversational: microsoft/DialoGPT-large
+  feature-extraction: sentence-transformers/paraphrase-xlm-r-multilingual-v1
+  image-classification: google/vit-base-patch16-224
+  object-detection: facebook/detr-resnet-50
+  speech-recognition: facebook/wav2vec2-base-960h
+  audio-classification: superb/hubert-large-superb-er
