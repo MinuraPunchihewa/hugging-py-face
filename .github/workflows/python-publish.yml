@@ -26,6 +26,8 @@ jobs:
       - name: Run unit tests
         run: python -m unittest discover tests
         shell: bash
+        env:
+          API_KEY: ${{ secrets.HF_TOKEN }}
   source-dist:
     needs: test
     runs-on: windows-latest
