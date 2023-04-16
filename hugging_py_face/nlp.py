@@ -33,7 +33,7 @@ class NLP:
         response = requests.request("POST", api_url, headers=headers, data=json.dumps(data))
         return json.loads(response.content.decode("utf-8"))
 
-    def _query_in_df(self, df: DataFrame, column: Text, parameters: Optional[Dict] = None, options: Optional[Dict] = None, model: Optional[Text] = None, task: Optional[Text] = None) -> DataFrame:
+    def _query_in_df(self, df: DataFrame, column: Text, parameters: Optional[Dict] = None, options: Optional[Dict] = None, model: Optional[Text] = None, task: Optional[Text] = None) -> Union[Dict, List]:
         api_url = f"{self.config['BASE_URL']}/{model if model is not None else self.config['TASK_MODEL_MAP'][task]}"
 
         headers = {
@@ -126,6 +126,20 @@ class NLP:
         :return: a dict or a list of dicts indicating the sentiment of the string(s).
         """
         return self._query(text, options=options, model=model, task='text-classification')
+
+    def text_classification_in_df(self, df: DataFrame, column: Text, options: Optional[Dict] = None, model: Optional[Text] = None) -> DataFrame:
+        """
+        Analyze the sentiment of a string or a list of strings.
+
+        :param df: a pandas DataFrame containing the text to be analyzed.
+        :param column: the column name of the text to be analyzed.
+        :param options: a dict of options. For more information, see the `detailed parameters for the summarization task <https://huggingface.co/docs/api-inference/detailed_parameters#text-classification-task>`_.
+        :param model: the model to use for the text classification task. If not provided, the recommended model from Hugging Face will be used.
+        :return: a pandas dataframe with the sentiment of the string(s). The sentiment will be added as a new column called 'predictions' to the original dataframe.
+        """
+        predictions = self._query_in_df(df, column, options=options, model=model, task='text-classification')
+        df['predictions'] = [prediction[0]['label'] for prediction in predictions]
+        return df
 
     def text_generation(self, text: Union[Text, List], parameters: Optional[Dict] = None, options: Optional[Dict] = None, model: Optional[Text] = None) -> Union[Dict, List]:
         """
