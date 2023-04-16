@@ -64,6 +64,25 @@ class NLP:
         """
         return self._query(text, options=options, model=model, task='fill-mask')
 
+    def fill_mask_in_df(self, df: DataFrame, column: Text, options: Optional[Dict] = None, model: Optional[Text] = None) -> List:
+        """
+        Fill in the masked portion(token) of a column of strings in a DataFrame.
+
+        :param df: a pandas DataFrame containing the strings to be filled.
+        :param column: the column containing the strings to be filled.
+        :param options: a dict of options. For more information, see the `detailed parameters for the fill mask task <https://huggingface.co/docs/api-inference/detailed_parameters#fill-mask-task>`_.
+        :param model: the model to use for the fill mask task. If not provided, the recommended model from Hugging Face will be used.
+        :return: a pandas DataFrame with the completions for the masked strings. Each completion added will be the one with the highest probability for that particular masked string. The completions will be added as a new column called 'predictions' to the original DataFrame.
+        """
+        predictions = self._query_in_df(df, column, options=options, model=model, task='fill-mask')
+
+        if any(isinstance(prediction, list) for prediction in predictions):
+            df['predictions'] = [prediction[0]['sequence'] for prediction in predictions]
+        else:
+            df['predictions'] = [predictions[0]['sequence']]
+
+        return df
+
     def summarization(self, text: Union[Text, List], parameters: Optional[Dict] = None, options: Optional[Dict] = None, model: Optional[Text] = None) -> Union[Dict, List]:
         """
         Summarize a string or a list of strings.
@@ -123,19 +142,19 @@ class NLP:
         :param text: a string or list of strings to be analyzed.
         :param options: a dict of options. For more information, see the `detailed parameters for the summarization task <https://huggingface.co/docs/api-inference/detailed_parameters#text-classification-task>`_.
         :param model: the model to use for the text classification task. If not provided, the recommended model from Hugging Face will be used.
-        :return: a dict or a list of dicts indicating the sentiment of the string(s).
+        :return: a dict or a list of dicts indicating the possible sentiments of the string(s) and their associated probabilities.
         """
         return self._query(text, options=options, model=model, task='text-classification')
 
     def text_classification_in_df(self, df: DataFrame, column: Text, options: Optional[Dict] = None, model: Optional[Text] = None) -> DataFrame:
         """
-        Analyze the sentiment of a string or a list of strings.
+        Analyze the sentiment of a column of strings in a DataFrame.
 
-        :param df: a pandas DataFrame containing the text to be analyzed.
-        :param column: the column name of the text to be analyzed.
+        :param df: a pandas DataFrame containing the strings to be analyzed.
+        :param column: the column containing the strings to be analyzed.
         :param options: a dict of options. For more information, see the `detailed parameters for the summarization task <https://huggingface.co/docs/api-inference/detailed_parameters#text-classification-task>`_.
         :param model: the model to use for the text classification task. If not provided, the recommended model from Hugging Face will be used.
-        :return: a pandas dataframe with the sentiment of the string(s). The sentiment will be added as a new column called 'predictions' to the original dataframe.
+        :return: a pandas DataFrame with the sentiment of the string(s). Each sentiment added will be the one with the highest probability for that particular string. The sentiment will be added as a new column called 'predictions' to the original DataFrame.
         """
         predictions = self._query_in_df(df, column, options=options, model=model, task='text-classification')
         df['predictions'] = [prediction[0]['label'] for prediction in predictions]
