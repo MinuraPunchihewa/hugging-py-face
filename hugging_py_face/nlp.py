@@ -1,6 +1,8 @@
 import json
 import requests
+from pandas import DataFrame
 from typing import Text, List, Dict, Optional, Union
+
 from .config_parser import ConfigParser
 
 
@@ -20,6 +22,26 @@ class NLP:
 
         data = {
             "inputs": inputs
+        }
+
+        if parameters is not None:
+            data['parameters'] = parameters
+
+        if options is not None:
+            data['options'] = options
+
+        response = requests.request("POST", api_url, headers=headers, data=json.dumps(data))
+        return json.loads(response.content.decode("utf-8"))
+
+    def _query_in_df(self, df: DataFrame, column: Text, parameters: Optional[Dict] = None, options: Optional[Dict] = None, model: Optional[Text] = None, task: Optional[Text] = None) -> DataFrame:
+        api_url = f"{self.config['BASE_URL']}/{model if model is not None else self.config['TASK_MODEL_MAP'][task]}"
+
+        headers = {
+            "Authorization": f"Bearer {self.api_token}"
+        }
+
+        data = {
+            "inputs": df[column].tolist()
         }
 
         if parameters is not None:
