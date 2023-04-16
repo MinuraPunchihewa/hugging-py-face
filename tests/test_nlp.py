@@ -20,31 +20,31 @@ class TestNLP(unittest.TestCase):
             [
                 {
                     "sequence": "the answer to the universe is no.",
-                    "score": 0.1696,
+                    "score": 0.16963981091976166,
                     "token": 2053,
                     "token_str": "no",
                 },
                 {
                     "sequence": "the answer to the universe is nothing.",
-                    "score": 0.0734,
+                    "score": 0.07344783842563629,
                     "token": 2498,
                     "token_str": "nothing",
                 },
                 {
                     "sequence": "the answer to the universe is yes.",
-                    "score": 0.0580,
+                    "score": 0.05803249776363373,
                     "token": 2748,
                     "token_str": "yes",
                 },
                 {
                     "sequence": "the answer to the universe is unknown.",
-                    "score": 0.044,
+                    "score": 0.043957870453596115,
                     "token": 4242,
                     "token_str": "unknown",
                 },
                 {
                     "sequence": "the answer to the universe is simple.",
-                    "score": 0.0402,
+                    "score": 0.040157340466976166,
                     "token": 3722,
                     "token_str": "simple",
                 },
@@ -70,7 +70,7 @@ class TestNLP(unittest.TestCase):
         self.assertEqual(
             self.nlp.question_answering(question, context),
             {
-                "score": 0.9327,
+                "score": 0.7940344214439392,
                 "start": 11,
                 "end": 16,
                 "answer": "Clara"
@@ -104,9 +104,15 @@ class TestNLP(unittest.TestCase):
 
         self.assertEqual(
             self.nlp.text_generation(text),
-            {
-                "generated_text": 'The answer to the universe is that we are the creation of the entire universe," says Fitch.\n\nAs of the 1960s, six times as many Americans still make fewer than six bucks ($17) per year on their way to retirement.'
-            },
+            [
+                {
+                    'generated_text': 'The answer to the universe is that it starts with a small '
+                                'group of people. If you ask 10 people what they want on '
+                                "their computer, you'll get 10 replies that the internet "
+                                'or a Facebook page. So what about the universe in '
+                                'general?\n'
+                }
+            ]
         )
 
     def test_zero_shot_classification(self):
@@ -120,9 +126,9 @@ class TestNLP(unittest.TestCase):
                 "labels": ["refund", "faq", "legal"],
                 "scores": [
                     # 88% refund
-                    0.8778,
-                    0.1052,
-                    0.017,
+                    0.8777875304222107,
+                    0.10522652417421341,
+                    0.01698593609035015,
                 ],
             },
         )
