@@ -64,7 +64,7 @@ class NLP:
         """
         return self._query(text, options=options, model=model, task='fill-mask')
 
-    def fill_mask_in_df(self, df: DataFrame, column: Text, options: Optional[Dict] = None, model: Optional[Text] = None) -> List:
+    def fill_mask_in_df(self, df: DataFrame, column: Text, options: Optional[Dict] = None, model: Optional[Text] = None) -> DataFrame:
         """
         Fill in the masked portion(token) of a column of strings in a DataFrame.
 
@@ -94,6 +94,21 @@ class NLP:
         :return: a dict or a list of dicts of the summarized string(s).
         """
         return self._query(text, parameters=parameters, options=options, model=model, task='summarization')
+
+    def summarization_in_df(self, df: DataFrame, column: Text, parameters: Optional[Dict] = None, options: Optional[Dict] = None, model: Optional[Text] = None) -> DataFrame:
+        """
+        Summarize a column of strings in a DataFrame.
+
+        :param df: a pandas DataFrame containing the strings to be summarized.
+        :param column: the column containing the strings to be summarized.
+        :param parameters: a dict of parameters. For more information, see the `detailed parameters for the summarization task <https://huggingface.co/docs/api-inference/detailed_parameters#summarization-task>`_.
+        :param options: a dict of options. For more information, see the `detailed parameters for the summarization task <https://huggingface.co/docs/api-inference/detailed_parameters#summarization-task>`_.
+        :param model: the model to use for the summarization task. If not provided, the recommended model from Hugging Face will be used.
+        :return: a pandas DataFrame with the summarizations for the strings. The summarizations will be added as a new column called 'predictions' to the original DataFrame.
+        """
+        predictions = self._query_in_df(df, column, options=options, model=model, task='summarization')
+        df['predictions'] = [prediction['summary_text'] for prediction in predictions]
+        return df
 
     def question_answering(self, question: Text, context: Text, model: Optional[Text] = None) -> Dict:
         """
@@ -154,7 +169,7 @@ class NLP:
         :param column: the column containing the strings to be analyzed.
         :param options: a dict of options. For more information, see the `detailed parameters for the summarization task <https://huggingface.co/docs/api-inference/detailed_parameters#text-classification-task>`_.
         :param model: the model to use for the text classification task. If not provided, the recommended model from Hugging Face will be used.
-        :return: a pandas DataFrame with the sentiment of the string(s). Each sentiment added will be the one with the highest probability for that particular string. The sentiment will be added as a new column called 'predictions' to the original DataFrame.
+        :return: a pandas DataFrame with the sentiment of the strings. Each sentiment added will be the one with the highest probability for that particular string. The sentiment will be added as a new column called 'predictions' to the original DataFrame.
         """
         predictions = self._query_in_df(df, column, options=options, model=model, task='text-classification')
         df['predictions'] = [prediction[0]['label'] for prediction in predictions]
