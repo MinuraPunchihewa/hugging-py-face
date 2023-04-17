@@ -19,7 +19,7 @@ class AudioProcessing(MultimediaProcessing):
         if type(input) == list:
             return self._query_in_list(inputs, model=model, task="speech-recognition")
         elif type(input) == str:
-            return self._query(input, model=model, task="speech-recognition")
+            return self._query(inputs, model=model, task="speech-recognition")
 
     def speech_recognition_in_df(self, df: DataFrame, column: Text, model: Optional[Text] = None) -> DataFrame:
         """
@@ -45,7 +45,7 @@ class AudioProcessing(MultimediaProcessing):
         if type(input) == list:
             return self._query_in_list(inputs, model=model, task="audio-classification")
         elif type(input) == str:
-            return self._query(input, model=model, task="audio-classification")
+            return self._query(inputs, model=model, task="audio-classification")
 
     def audio_classification_in_df(self, df: DataFrame, column: Text, model: Optional[Text] = None) -> DataFrame:
         """
