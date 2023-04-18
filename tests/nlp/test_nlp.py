@@ -105,13 +105,14 @@ class TestNLP(unittest.TestCase):
         self.assertEqual(
             self.nlp.text_generation(text),
             [
-                {
-                    'generated_text': 'The answer to the universe is that it starts with a small '
-                                'group of people. If you ask 10 people what they want on '
-                                "their computer, you'll get 10 replies that the internet "
-                                'or a Facebook page. So what about the universe in '
-                                'general?\n'
-                }
+                {'generated_text': "The answer to the universe is in one's own minds and your "
+                                'thoughts.\n'
+                                '\n'
+                                'When the universe is created to bring forth new creation, '
+                                'our minds are born anew. The universe is a process '
+                                'wherein all things are possible and the universe is one '
+                                'created'
+                 }
             ]
         )
 

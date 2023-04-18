@@ -11,12 +11,11 @@ class TestComputerVision(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.cp = ComputerVision(os.environ.get("API_KEY"))
+        cls.inputs = os.path.join(os.path.dirname(__file__), '..', 'resources', 'dogs.jpeg')
 
     def test_image_classification(self):
-        input = "resources/dogs.jpeg"
-
         self.assertEqual(
-            self.cp.image_classification(input),
+            self.cp.image_classification(self.inputs),
             [
                 {
                     'score': 0.9061778783798218,
@@ -42,10 +41,8 @@ class TestComputerVision(unittest.TestCase):
         )
 
     def test_object_detection(self):
-        input = "resources/dogs.jpeg"
-
         self.assertEqual(
-            self.cp.object_detection(input),
+            self.cp.object_detection(self.inputs),
             [
                 {
                     'score': 0.9990463852882385,

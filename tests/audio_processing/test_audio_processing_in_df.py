@@ -13,30 +13,29 @@ class TestAudioProcessingInDF(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.ap = AudioProcessing(os.environ.get("API_KEY"))
+        cls.inputs = [os.path.join(os.path.dirname(__file__), '..', 'resources', 'amused.wav')]
 
     def test_speech_recognition_in_df(self):
-        paths = ["resources/amused.wav"]
-        df = pd.DataFrame(paths, columns=['inputs'])
+        df = pd.DataFrame(self.inputs, columns=['inputs'])
 
         assert_frame_equal(
             self.ap.speech_recognition_in_df(df, 'inputs'),
             pd.DataFrame(
                 {
-                    "inputs": ["resources/amused.wav"],
+                    "inputs": self.inputs,
                     "predictions": ["I AM PLAYING A SINGLE HAND IN IT LOOKS LIKE A LOSING GAME"],
                 }
             ),
         )
 
     def test_audio_classification_in_df(self):
-        paths = ["resources/amused.wav"]
-        df = pd.DataFrame(paths, columns=['inputs'])
+        df = pd.DataFrame(self.inputs, columns=['inputs'])
 
         assert_frame_equal(
             self.ap.audio_classification_in_df(df, 'inputs'),
             pd.DataFrame(
                 {
-                    "inputs": ["resources/amused.wav"],
+                    "inputs": self.inputs,
                     "predictions": ["hap"],
                 }
             ),

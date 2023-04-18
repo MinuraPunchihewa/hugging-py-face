@@ -13,16 +13,16 @@ class TestComputerVisionInDF(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.cp = ComputerVision(os.environ.get("API_KEY"))
+        cls.inputs = [os.path.join(os.path.dirname(__file__), '..', 'resources', 'dogs.jpeg')]
 
     def test_image_classification_in_df(self):
-        paths = ["resources/dogs.jpeg"]
-        df = pd.DataFrame(paths, columns=['inputs'])
+        df = pd.DataFrame(self.inputs, columns=['inputs'])
 
         assert_frame_equal(
             self.cp.image_classification_in_df(df, 'inputs'),
             pd.DataFrame(
                 {
-                    "inputs": ["resources/dogs.jpeg"],
+                    "inputs": self.inputs,
                     "predictions": ["golden retriever"],
                 }
             ),

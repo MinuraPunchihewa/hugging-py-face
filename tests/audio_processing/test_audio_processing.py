@@ -11,22 +11,19 @@ class TestAudioProcessing(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.ap = AudioProcessing(os.environ.get("API_KEY"))
+        cls.inputs = os.path.join(os.path.dirname(__file__), '..', 'resources', 'amused.wav')
 
     def test_speech_recognition(self):
-        input = "resources/amused.wav"
-
         self.assertEqual(
-            self.ap.speech_recognition(input),
+            self.ap.speech_recognition(self.inputs),
             {
                 'text': 'I AM PLAYING A SINGLE HAND IN IT LOOKS LIKE A LOSING GAME'
             },
         )
 
     def test_audio_classification(self):
-        input = "resources/amused.wav"
-
         self.assertEqual(
-            self.ap.audio_classification(input),
+            self.ap.audio_classification(self.inputs),
             [
                 {
                     'score': 0.996896505355835,
