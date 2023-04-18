@@ -206,7 +206,7 @@ class NLP:
             task='zero-shot-classification'
         )
 
-    def conversational(self, text: Union[Text, List], past_user_inputs: Optional[Union[Text, List]] = None, generated_responses: Optional[Union[Text, List]] = None, parameters: Optional[Dict] = None, options: Optional[Dict] = None, model: Optional[Text] = None) -> Union[Dict, List]:
+    def conversational(self, text: Union[Text, List], past_user_inputs: Optional[List] = None, generated_responses: Optional[List] = None, parameters: Optional[Dict] = None, options: Optional[Dict] = None, model: Optional[Text] = None) -> Union[Dict, List]:
         """
         Corresponds to any chatbot like structure: pass in some text along with the past_user_inputs and generated_responses to receive a response.
 
