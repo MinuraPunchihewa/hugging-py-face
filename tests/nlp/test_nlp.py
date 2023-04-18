@@ -105,13 +105,14 @@ class TestNLP(unittest.TestCase):
         self.assertEqual(
             self.nlp.text_generation(text),
             [
-                {
-                    'generated_text': 'The answer to the universe is that it starts with a small '
-                                'group of people. If you ask 10 people what they want on '
-                                "their computer, you'll get 10 replies that the internet "
-                                'or a Facebook page. So what about the universe in '
-                                'general?\n'
-                }
+                {'generated_text': "The answer to the universe is in one's own minds and your "
+                                'thoughts.\n'
+                                '\n'
+                                'When the universe is created to bring forth new creation, '
+                                'our minds are born anew. The universe is a process '
+                                'wherein all things are possible and the universe is one '
+                                'created'
+                 }
             ]
         )
 
@@ -133,28 +134,31 @@ class TestNLP(unittest.TestCase):
             },
         )
 
-        def test_conversational(self):
-            past_user_inputs =  ["Which movie is the best ?"],
-            generated_responses = ["It's Die Hard for sure."],
-            text = "Can you explain why ?"
+    def test_conversational(self):
+        past_user_inputs = ["Which movie is the best ?"]
+        generated_responses = ["It's Die Hard for sure."]
+        text = "Can you explain why ?"
 
-            self.assertEqual(
-                self.nlp.conversational(text, past_user_inputs, generated_responses),
-                {
-                    "generated_text": "It's the best movie ever.",
-                    "conversation": {
-                        "past_user_inputs": [
-                            "Which movie is the best ?",
-                            "Can you explain why ?",
-                        ],
-                        "generated_responses": [
-                            "It's Die Hard for sure.",
-                            "It's the best movie ever.",
-                        ],
-                    },
-                    "warnings": ["Setting `pad_token_id` to `eos_token_id`:50256 for open-end generation."],
+        self.assertEqual(
+            self.nlp.conversational(text, past_user_inputs, generated_responses),
+            {
+                "generated_text": "It's the best movie ever.",
+                "conversation": {
+                    "past_user_inputs": [
+                        "Which movie is the best ?",
+                        "Can you explain why ?",
+                    ],
+                    "generated_responses": [
+                        "It's Die Hard for sure.",
+                        "It's the best movie ever.",
+                    ],
                 },
-            )
+                "warnings": ["Setting `pad_token_id` to `eos_token_id`:50256 for open-end generation."],
+            },
+        )
 
     def test_feature_extraction(self):
-        pass
+        text = "Transformers is an awesome library!"
+
+        self.assertEqual(type(self.nlp.feature_extraction(text)), list)
+

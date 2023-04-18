@@ -98,11 +98,9 @@ class NLP:
         Answer a question using the provided context.
 
         :param question: a string of the question to be answered.
-        :param context: a string of context.
+        :param context: a string of context. This field is required for the question answering task and cannot be left empty.
         :param model: the model to use for the question answering task. If not provided, the recommended model from Hugging Face will be used.
         :return: a dict of the answer.
-
-        # TODO: check if questions can be answered without context
         """
         return self._query(
             {
@@ -170,6 +168,21 @@ class NLP:
         """
         return self._query(text, parameters=parameters, options=options, model=model, task='text-generation')
 
+    def text_generation_in_df(self, df: DataFrame, column: Text, parameters: Optional[Dict] = None, options: Optional[Dict] = None, model: Optional[Text] = None) -> DataFrame:
+        """
+        Continue text from a prompt in the column of a DataFrame.
+
+        :param df: a pandas DataFrame containing the strings to be generated from.
+        :param column: the column containing the strings to be generated from.
+        :param parameters: a dict of parameters. For more information, see the `detailed parameters for the text generation task <https://huggingface.co/docs/api-inference/detailed_parameters#text-generation-task>`_.
+        :param options: a dict of options. For more information, see the `detailed parameters for the text generation task <https://huggingface.co/docs/api-inference/detailed_parameters#text-generation-task>`_.
+        :param model: the model to use for the text generation task. If not provided, the recommended model from Hugging Face will be used.
+        :return: a pandas DataFrame with the generated text. The generated text will be added as a new column called 'predictions' to the original DataFrame.
+        """
+        predictions = self._query_in_df(df, column, parameters=parameters, options=options, model=model, task='text-generation')
+        df['predictions'] = [prediction[0]['generated_text'] for prediction in predictions]
+        return df
+
     def zero_shot_classification(self, text: Union[Text, List], candidate_labels: List, parameters: Optional[Dict] = {}, options: Optional[Dict] = None, model: Optional[Text] = None) -> Union[Dict, List]:
         """
         Classify a sentence/paragraph to one of the candidate labels provided.
@@ -191,7 +204,7 @@ class NLP:
             task='zero-shot-classification'
         )
 
-    def conversational(self, text: Union[Text, List], past_user_inputs: Optional[Text] = None, generated_responses: Optional[Text] = None, parameters: Optional[Dict] = None, options: Optional[Dict] = None, model: Optional[Text] = None) -> Union[Dict, List]:
+    def conversational(self, text: Union[Text, List], past_user_inputs: Optional[List] = None, generated_responses: Optional[List] = None, parameters: Optional[Dict] = None, options: Optional[Dict] = None, model: Optional[Text] = None) -> Union[Dict, List]:
         """
         Corresponds to any chatbot like structure: pass in some text along with the past_user_inputs and generated_responses to receive a response.
 

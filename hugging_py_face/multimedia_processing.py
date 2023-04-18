@@ -30,3 +30,9 @@ class MultimediaProcessing:
 
         response = requests.request("POST", api_url, headers=headers, data=data)
         return json.loads(response.content.decode("utf-8"))
+
+    def _query_in_list(self, inputs: List[Text], model: Optional[Text] = None, task: Optional[Text] = None) -> List[Union[Dict, List]]:
+        return [self._query(input, model, task) for input in inputs]
+
+    def _query_in_df(self, df, input_column: Text, model: Optional[Text] = None, task: Optional[Text] = None) -> List[Union[Dict, List]]:
+        return self._query_in_list(df[input_column].tolist(), model, task)

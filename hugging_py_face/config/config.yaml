@@ -8,7 +8,7 @@ TASK_MODEL_MAP:
   text-generation: gpt2
   zero-shot-classification: facebook/bart-large-mnli
   conversational: microsoft/DialoGPT-large
-  feature-extraction: sentence-transformers/paraphrase-xlm-r-multilingual-v1
+  feature-extraction: julien-c/distilbert-feature-extraction
   image-classification: google/vit-base-patch16-224
   object-detection: facebook/detr-resnet-50
   speech-recognition: facebook/wav2vec2-base-960h
