@@ -1,6 +1,6 @@
 __title__ = 'hugging_py_face'
 __package_name__ = 'hugging_py_face'
-__version__ = '0.1.0'
+__version__ = '0.1.1'
 __description__ = "Hugging-Py-Face, the Python client for the Hugging Face Inference API."
 __email__ = "minurapunchihewa17@gmail.com"
 __author__ = 'Minura Punchihewa'
