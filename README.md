@@ -1,4 +1,6 @@
 # Hugging-Py-Face
+Copyright © 2023 Minura Punchihewa
+
 Hugging-Py-Face is a powerful Python package that provides seamless integration with the Hugging Face Inference API, allowing you to easily perform inference on your machine learning models hosted on the Hugging Face Model Hub. 
 
 One of the key benefits of using the Hugging Face Inference API is that it provides a scalable and efficient way to perform inference on your models, by allowing you to easily deploy and serve your models in the cloud. Additionally, the Inference API provides a simple and standardized API that can be used across different programming languages, making it easy to integrate your models with other services and tools.
@@ -101,3 +103,6 @@ Additionally, both of the above tasks can also be performed on a pandas DataFram
 ap.audio_classification_in_df(df, 'audio')
 # where df is a pandas DataFrame and 'audio' is the column name containing the audio file paths or URLs
 ```
+
+# License
+This code is licensed under the GNU GENERAL PUBLIC LICENSE. See LICENSE.txt for details.
