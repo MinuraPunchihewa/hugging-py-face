@@ -37,6 +37,17 @@ nlp.text_classification("I like you. I love you.")
 nlp.text_generation("The answer to the universe is")
 ```
 
+The inputs to these methods can also be a list of strings. For example:
+```
+nlp.text_classification(["I like you. I love you.", "I hate you. I despise you."])
+```
+
+Additionally, the fill mask, summarization, text classification and text generation tasks can also be performed on a pandas DataFrame. For example:
+```
+nlp.text_classification_in_df(df, 'text')
+# where df is a pandas DataFrame and 'text' is the column name containing the text
+```
+
 ### Computer Vision
 ```
 from hugging_py_face import ComputerVision
@@ -53,6 +64,17 @@ cp.image_classification("cats.jpg")
 cp.object_detection("cats.jpg")
 ```
 
+The inputs to these methods can also be a list of images. For example:
+```
+cp.image_classification(["cats.jpg", "dogs.jpg"])
+```
+
+Additionally, the image classification task can also be performed on a pandas DataFrame. For example:
+```
+cp.image_classification_in_df(df, 'images')
+# where df is a pandas DataFrame and 'images' is the column name containing the image file paths or URLs
+```
+
 ### Audio Processing
 ```
 from hugging_py_face import AudioProcessing
@@ -67,5 +89,15 @@ ap.audio_classification("dogs.wav")
 # perform speech recognition
 # the audio file can be a local file or a URL
 ap.speech_recognition("dogs.wav")
+```
 
+The inputs to these methods can also be a list of audio files. For example:
+```
+ap.audio_classification(["dogs.wav", "cats.wav"])
+```
+
+Additionally, both of the above tasks can also be performed on a pandas DataFrame. For example:
+```
+ap.audio_classification_in_df(df, 'audio')
+# where df is a pandas DataFrame and 'audio' is the column name containing the audio file paths or URLs
 ```
