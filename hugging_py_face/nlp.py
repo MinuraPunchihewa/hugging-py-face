@@ -89,7 +89,7 @@ class NLP:
         :param model: the model to use for the summarization task. If not provided, the recommended model from Hugging Face will be used.
         :return: a pandas DataFrame with the summarizations for the strings. The summarizations will be added as a new column called 'predictions' to the original DataFrame.
         """
-        predictions = self._query_in_df(df, column, options=options, model=model, task='summarization')
+        predictions = self._query_in_df(df, column, parameters=parameters, options=options, model=model, task='summarization')
         df['predictions'] = [prediction['summary_text'] for prediction in predictions]
         return df
 

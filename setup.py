@@ -28,8 +28,11 @@ setuptools.setup(
     install_requires=requirements,
     classifiers=(
         "Programming Language :: Python :: 3",
+        "License :: OSI Approved :: GPL-3.0 License",
         "Operating System :: OS Independent",
     ),
-    include_package_data=True,
+    package_data={
+        'hugging_py_face': ['config/*.yml', 'config/*.yaml']
+    },
     python_requires=">=3.7"
 )
