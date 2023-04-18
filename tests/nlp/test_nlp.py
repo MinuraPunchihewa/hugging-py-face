@@ -134,28 +134,31 @@ class TestNLP(unittest.TestCase):
             },
         )
 
-        def test_conversational(self):
-            past_user_inputs =  ["Which movie is the best ?"],
-            generated_responses = ["It's Die Hard for sure."],
-            text = "Can you explain why ?"
+    def test_conversational(self):
+        past_user_inputs = ["Which movie is the best ?"]
+        generated_responses = ["It's Die Hard for sure."]
+        text = "Can you explain why ?"
 
-            self.assertEqual(
-                self.nlp.conversational(text, past_user_inputs, generated_responses),
-                {
-                    "generated_text": "It's the best movie ever.",
-                    "conversation": {
-                        "past_user_inputs": [
-                            "Which movie is the best ?",
-                            "Can you explain why ?",
-                        ],
-                        "generated_responses": [
-                            "It's Die Hard for sure.",
-                            "It's the best movie ever.",
-                        ],
-                    },
-                    "warnings": ["Setting `pad_token_id` to `eos_token_id`:50256 for open-end generation."],
+        self.assertEqual(
+            self.nlp.conversational(text, past_user_inputs, generated_responses),
+            {
+                "generated_text": "It's the best movie ever.",
+                "conversation": {
+                    "past_user_inputs": [
+                        "Which movie is the best ?",
+                        "Can you explain why ?",
+                    ],
+                    "generated_responses": [
+                        "It's Die Hard for sure.",
+                        "It's the best movie ever.",
+                    ],
                 },
-            )
+                "warnings": ["Setting `pad_token_id` to `eos_token_id`:50256 for open-end generation."],
+            },
+        )
 
     def test_feature_extraction(self):
-        pass
+        text = "Transformers is an awesome library!"
+
+        self.assertEqual(type(self.nlp.feature_extraction(text)), list)
+
