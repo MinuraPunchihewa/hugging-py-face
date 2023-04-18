@@ -16,9 +16,9 @@ class ComputerVision(MultimediaProcessing):
         :param model: the model to use for the image classification task. If not provided, the recommended model from Hugging Face will be used.
         :return: a list of dictionaries each containing the label and the confidence score for that label.
         """
-        if type(input) == list:
+        if type(inputs) == list:
             return self._query_in_list(inputs, model=model, task="image-classification")
-        elif type(input) == str:
+        elif type(inputs) == str:
             return self._query(inputs, model=model, task="image-classification")
 
     def image_classification_in_df(self, df: DataFrame, column: Text, model: Optional[Text] = None) -> DataFrame:
@@ -42,7 +42,7 @@ class ComputerVision(MultimediaProcessing):
         :param model: the model to use for the object detection task. If not provided, the recommended model from Hugging Face will be used.
         :return: a list of dictionaries each containing the label, the confidence score for that label, and the bounding box coordinates.
         """
-        if type(input) == list:
+        if type(inputs) == list:
             return self._query(inputs, model=model, task="object-detection")
-        elif type(input) == str:
+        elif type(inputs) == str:
             return self._query(inputs, model=model, task="object-detection")

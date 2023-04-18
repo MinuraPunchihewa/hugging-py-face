@@ -16,9 +16,9 @@ class AudioProcessing(MultimediaProcessing):
         :param model: the model to use for the speech recognition task. If not provided, the recommended model from Hugging Face will be used.
         :return: a dictionary or a list of dictionaries containing the text recognized from the audio file(s).
         """
-        if type(input) == list:
+        if type(inputs) == list:
             return self._query_in_list(inputs, model=model, task="speech-recognition")
-        elif type(input) == str:
+        elif type(inputs) == str:
             return self._query(inputs, model=model, task="speech-recognition")
 
     def speech_recognition_in_df(self, df: DataFrame, column: Text, model: Optional[Text] = None) -> DataFrame:
@@ -42,9 +42,9 @@ class AudioProcessing(MultimediaProcessing):
         :param model: the model to use for the audio classification task. If not provided, the recommended model from Hugging Face will be used.
         :return: a list of dictionaries or a list of lists of dictionaries each containing the label and the confidence score for that label.
         """
-        if type(input) == list:
+        if type(inputs) == list:
             return self._query_in_list(inputs, model=model, task="audio-classification")
-        elif type(input) == str:
+        elif type(inputs) == str:
             return self._query(inputs, model=model, task="audio-classification")
 
     def audio_classification_in_df(self, df: DataFrame, column: Text, model: Optional[Text] = None) -> DataFrame:
