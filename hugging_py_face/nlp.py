@@ -156,6 +156,31 @@ class NLP:
             task='sentence-similarity'
         )
 
+    def sentence_similarity_in_df(self, df: DataFrame, source_sentence_column: Text, sentence_column: Text, options: Optional[Dict] = None, model: Optional[Text] = None) -> DataFrame:
+        """
+
+        :param df: a pandas DataFrame containing the source sentences and the sentences to be compared against.
+        :param source_sentence_column: the column containing the strings that you wish to compare the other strings with.
+        :param sentence_column: the column containing the strings which will be compared against the source_sentence.
+        :param options: a dict of options. For more information, see the `detailed parameters for the sentence similarity task <https://huggingface.co/docs/api-inference/detailed_parameters#sentence-similarity-task>`_.
+        :param model: the model to use for the sentence similarity task. If not provided, the recommended model from Hugging Face will be used.
+        :return: a pandas DataFrame with the similarity scores for the sentences. The scores will be added as a new column called 'predictions' to the original DataFrame.
+        """
+        scores = []
+        for index, row in df.iterrows():
+            score = self._query(
+                {
+                    "source_sentence": row[source_sentence_column],
+                    "sentences": [row[sentence_column]]
+                },
+                model=model,
+                task='sentence-similarity'
+            )
+            scores.append(score[0])
+
+        df['predictions'] = scores
+        return df
+
     def text_classification(self, text: Union[Text, List], options: Optional[Dict] = None, model: Optional[Text] = None) -> Union[Dict, List]:
         """
         Analyze the sentiment of a string or a list of strings.
