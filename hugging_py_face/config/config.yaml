@@ -3,6 +3,7 @@ TASK_MODEL_MAP:
   fill-mask: bert-base-uncased
   summarization: facebook/bart-large-cnn
   question-answering: deepset/roberta-base-squad2
+  table-question-answering: google/tapas-base-finetuned-wtq
   sentence-similarity: sentence-transformers/all-MiniLM-L6-v2
   text-classification: distilbert-base-uncased-finetuned-sst-2-english
   text-generation: gpt2
