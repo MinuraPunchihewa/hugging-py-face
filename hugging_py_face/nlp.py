@@ -136,6 +136,25 @@ class NLP:
         df['predictions'] = answers
         return df
 
+    def table_question_answering(self, question: Union[Text, List], table: List[Dict], options: Optional[Dict] = None, model: Optional[Text] = None) -> List:
+        """
+
+        :param question: a string or a list of strings of the question(s) to be answered.
+        :param table: a list of dicts representing a table of data.
+        :param options: a dict of options. For more information, see the `detailed parameters for the table question answering task <https://huggingface.co/docs/api-inference/detailed_parameters#table-question-answering-task>`_.
+        :param model: the model to use for the table question answering task. If not provided, the recommended model from Hugging Face will be used.
+        :return: a dict or a list of dicts of the answers.
+        """
+        return self._query(
+            {
+                "query": question,
+                "table": table
+            },
+            options=options,
+            model=model,
+            task='question-answering'
+        )
+
     def sentence_similarity(self, source_sentence: Text, sentences: List, options: Optional[Dict] = None, model: Optional[Text] = None) -> List:
         """
         Calculate the semantic similarity between one text and a list of other sentences by comparing their embeddings.
