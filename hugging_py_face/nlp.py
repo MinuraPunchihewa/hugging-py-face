@@ -138,7 +138,7 @@ class NLP:
         df['predictions'] = answers
         return df
 
-    def table_question_answering(self, question: Union[Text, List], table: Dict[List], options: Optional[Dict] = None, model: Optional[Text] = None) -> List:
+    def table_question_answering(self, question: Union[Text, List], table: Dict[Text, List], options: Optional[Dict] = None, model: Optional[Text] = None) -> List:
         """
 
         :param question: a string or a list of strings of the question(s) to be answered.
