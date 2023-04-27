@@ -158,6 +158,7 @@ class NLP:
 
     def sentence_similarity_in_df(self, df: DataFrame, source_sentence_column: Text, sentence_column: Text, options: Optional[Dict] = None, model: Optional[Text] = None) -> DataFrame:
         """
+        Calculate the semantic similarity between sentences in two columns by comparing their embeddings.
 
         :param df: a pandas DataFrame containing the source sentences and the sentences to be compared against.
         :param source_sentence_column: the column containing the strings that you wish to compare the other strings with.
@@ -253,6 +254,22 @@ class NLP:
             model=model,
             task='zero-shot-classification'
         )
+
+    def zero_shot_classification_in_df(self, df: DataFrame, column: Text, candidate_labels: List, parameters: Optional[Dict] = {}, options: Optional[Dict] = None, model: Optional[Text] = None):
+        """
+
+        :param df: a pandas DataFrame containing the strings to be classified.
+        :param column: the column containing the strings to be classified.
+        :param candidate_labels: a list of strings that are potential classes for inputs.
+        :param parameters: a dict of parameters excluding candidate_labels which is passed in as a separate argument. For more information, see the `detailed parameters for the zero shot classification task <https://huggingface.co/docs/api-inference/detailed_parameters#zeroshot-classification-task>`_.
+        :param options: a dict of options. For more information, see the `detailed parameters for the zero shot classification task <https://huggingface.co/docs/api-inference/detailed_parameters#zeroshot-classification-task>`_.
+        :param model: the model to use for the zero shot classification task. If not provided, the recommended model from Hugging Face will be used.
+        :return: a pandas DataFrame with the classifications. The classifications will be added as a new column called 'predictions' to the original DataFrame.
+        """
+        parameters['candidate_labels'] = candidate_labels
+        predictions = self._query_in_df(df, column, parameters=parameters, options=options, model=model, task='zero-shot-classification')
+        df['predictions'] = [prediction['labels'][0] for prediction in predictions]
+        return df
 
     def conversational(self, text: Union[Text, List], past_user_inputs: Optional[List] = None, generated_responses: Optional[List] = None, parameters: Optional[Dict] = None, options: Optional[Dict] = None, model: Optional[Text] = None) -> Union[Dict, List]:
         """
