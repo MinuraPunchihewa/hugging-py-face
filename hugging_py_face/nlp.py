@@ -1,4 +1,6 @@
 import json
+
+import pandas as pd
 import requests
 from pandas import DataFrame
 from typing import Text, List, Dict, Optional, Union
@@ -152,8 +154,24 @@ class NLP:
             },
             options=options,
             model=model,
-            task='question-answering'
+            task='table-question-answering'
         )
+
+    def table_question_answering_task_in_df(self, df: DataFrame, question: Union[Text, List], options: Optional[Dict] = None, model: Optional[Text] = None) -> DataFrame:
+        answers = self._query(
+            {
+                "query": question,
+                "table": df.to_dict('list')
+            },
+            options=options,
+            model=model,
+            task='table-question-answering'
+        )
+
+        return pd.DataFrame({
+            "question": question,
+            "predictions": [answer['answer'] for answer in answers]
+        })
 
     def sentence_similarity(self, source_sentence: Text, sentences: List, options: Optional[Dict] = None, model: Optional[Text] = None) -> List:
         """
