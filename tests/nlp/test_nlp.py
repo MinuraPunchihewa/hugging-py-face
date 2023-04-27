@@ -77,6 +77,29 @@ class TestNLP(unittest.TestCase):
             }
         )
 
+    def test_table_question_answering(self):
+        question = "How many stars does the transformers repository have?"
+        table = {
+            "Repository": ["Transformers", "Datasets", "Tokenizers"],
+            "Stars": ["36542", "4512", "3934"],
+            "Contributors": ["651", "77", "34"],
+            "Programming language": [
+                "Python",
+                "Python",
+                "Rust, Python and NodeJS",
+            ],
+        }
+
+        self.assertEqual(
+            self.nlp.table_question_answering(question, table),
+            {
+                "answer": "AVERAGE > 36542",
+                "coordinates": [[0, 1]],
+                "cells": ["36542"],
+                "aggregator": "AVERAGE",
+            },
+        )
+
     def test_sentence_similarity(self):
         source_sentence = "That is a happy person"
         sentences = ["That is a happy dog", "That is a very happy person", "Today is a sunny day"]
