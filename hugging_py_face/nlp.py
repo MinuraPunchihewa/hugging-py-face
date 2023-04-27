@@ -111,6 +111,31 @@ class NLP:
             task='question-answering'
         )
 
+    def question_answering_in_df(self, df: DataFrame, question_column: Text, context_column: Text, model: Optional[Text] = None) -> DataFrame:
+        """
+        Generate answers for a column of questions based on a provided column of context.
+
+        :param df: a pandas DataFrame containing the questions to be answered along with the relevant context.
+        :param question_column: the column containing the questions to be answered.
+        :param context_column: the column containing the relevant context for each question.
+        :param model: the model to use for the question answering task. If not provided, the recommended model from Hugging Face will be used.
+        :return: a pandas DataFrame with the answers for the questions. The answers will be added as a new column called 'predictions' to the original DataFrame.
+        """
+        answers = []
+        for index, row in df.iterrows():
+            answer = self._query(
+                {
+                    "question": row[question_column],
+                    "context": row[context_column]
+                },
+                model=model,
+                task='question-answering'
+            )
+            answers.append(answer['answer'])
+
+        df['predictions'] = answers
+        return df
+
     def sentence_similarity(self, source_sentence: Text, sentences: List, options: Optional[Dict] = None, model: Optional[Text] = None) -> List:
         """
         Calculate the semantic similarity between one text and a list of other sentences by comparing their embeddings.
