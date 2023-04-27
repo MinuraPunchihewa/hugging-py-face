@@ -138,11 +138,11 @@ class NLP:
         df['predictions'] = answers
         return df
 
-    def table_question_answering(self, question: Union[Text, List], table: List[Dict], options: Optional[Dict] = None, model: Optional[Text] = None) -> List:
+    def table_question_answering(self, question: Union[Text, List], table: Dict[List], options: Optional[Dict] = None, model: Optional[Text] = None) -> List:
         """
 
         :param question: a string or a list of strings of the question(s) to be answered.
-        :param table: a list of dicts representing a table of data.
+        :param table: a dict of lists representing a table of data.
         :param options: a dict of options. For more information, see the `detailed parameters for the table question answering task <https://huggingface.co/docs/api-inference/detailed_parameters#table-question-answering-task>`_.
         :param model: the model to use for the table question answering task. If not provided, the recommended model from Hugging Face will be used.
         :return: a dict or a list of dicts of the answers.
