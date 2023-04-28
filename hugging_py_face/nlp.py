@@ -45,7 +45,7 @@ class NLP:
             retries += 1
 
             response = requests.request("POST", api_url, headers=headers, data=json.dumps(data))
-            if response.status_code == self.config['HTTP_SERVICE_UNAVAILABLE']:
+            if response.status_code == int(self.config['HTTP_SERVICE_UNAVAILABLE']):
                 self._logger.info(f"Status code: {response.status_code}.")
                 self._logger.info("Retrying..")
                 time.sleep(1)
