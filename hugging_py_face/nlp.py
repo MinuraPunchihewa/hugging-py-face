@@ -52,6 +52,8 @@ class NLP:
             else:
                 return json.loads(response.content.decode("utf-8"))
 
+        self._logger.info(f"Status code: {response.status_code}.")
+        self._logger.info("Connection to the server failed after reaching maximum retry attempts.")
         self._logger.debug(f"Response: {json.loads(response.content.decode('utf-8'))}.")
         raise HTTPServiceUnavailableException("The HTTP service is unavailable.")
 
