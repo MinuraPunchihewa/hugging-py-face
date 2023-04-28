@@ -1,11 +1,13 @@
 import json
-
-import pandas as pd
+import time
+import logging
 import requests
+import pandas as pd
 from pandas import DataFrame
 from typing import Text, List, Dict, Optional, Union
 
 from .config_parser import ConfigParser
+from .exceptions import HTTPServiceUnavailableException
 
 
 class NLP:
@@ -14,6 +16,11 @@ class NLP:
 
         config_parser = ConfigParser()
         self.config = config_parser.get_config_dict()
+
+    @property
+    def _logger(self):
+        logging.basicConfig(level=logging.INFO)
+        return logging.getLogger(__name__)
 
     def _query(self, inputs: Union[Text, List, Dict], parameters: Optional[Dict] = None, options: Optional[Dict] = None, model: Optional[Text] = None, task: Optional[Text] = None) -> Union[Dict, List]:
         api_url = f"{self.config['BASE_URL']}/{model if model is not None else self.config['TASK_MODEL_MAP'][task]}"
@@ -32,8 +39,21 @@ class NLP:
         if options is not None:
             data['options'] = options
 
-        response = requests.request("POST", api_url, headers=headers, data=json.dumps(data))
-        return json.loads(response.content.decode("utf-8"))
+        retries = 0
+
+        while retries < self.config['MAX_RETRIES']:
+            retries += 1
+
+            response = requests.request("POST", api_url, headers=headers, data=json.dumps(data))
+            if response.status_code == self.config['HTTP_SERVICE_UNAVAILABLE']:
+                self._logger.info(f"Status code: {response.status_code}.")
+                self._logger.info("Retrying..")
+                time.sleep(1)
+            else:
+                return json.loads(response.content.decode("utf-8"))
+
+        self._logger.debug(f"Status code: {json.loads(response.content.decode('utf-8'))}.")
+        raise HTTPServiceUnavailableException("The HTTP service is unavailable.")
 
     def _query_in_df(self, df: DataFrame, column: Text, parameters: Optional[Dict] = None, options: Optional[Dict] = None, model: Optional[Text] = None, task: Optional[Text] = None) -> Union[Dict, List]:
         return self._query(df[column].tolist(), parameters, options, model, task)
