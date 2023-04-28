@@ -147,13 +147,10 @@ class TestNLP(unittest.TestCase):
             self.assertEqual(
                 self.nlp.text_generation(text),
                 [
-                    {'generated_text': "The answer to the universe is in one's own minds and your "
-                                    'thoughts.\n'
-                                    '\n'
-                                    'When the universe is created to bring forth new creation, '
-                                    'our minds are born anew. The universe is a process '
-                                    'wherein all things are possible and the universe is one '
-                                    'created'
+                    {'generated_text': 'The answer to the universe is simple: The answer can be '
+                                    'proved. The first thing you should do is make an '
+                                    'appointment with a psychic called S.K. Gupta, a.k.a. '
+                                    'Shiva (his real name) who has the most'
                      }
                 ]
             )
