@@ -42,6 +42,45 @@ class TestNLPInDF(unittest.TestCase):
             ),
         )
 
+    def test_question_answering_in_df(self):
+        questions = ["What's my name?"]
+        contexts = ["My name is Clara and I live in Berkeley"]
+        df = pd.DataFrame({
+            "questions": questions,
+            "contexts": contexts
+        })
+
+        assert_frame_equal(
+            self.nlp.question_answering_in_df(df, 'questions', 'contexts'),
+            pd.DataFrame(
+                {
+                    "questions": questions,
+                    "contexts": contexts,
+                    "predictions": ["Clara"],
+                }
+            ),
+        )
+
+    def test_sentence_similarity_in_df(self):
+        source_sentences = ["That is a happy person"]
+        sentences = ["That is a happy dog"]
+
+        df = pd.DataFrame({
+            "source_sentences": source_sentences,
+            "sentences": sentences
+        })
+
+        assert_frame_equal(
+            self.nlp.sentence_similarity_in_df(df, 'source_sentences', 'sentences'),
+            pd.DataFrame(
+                {
+                    "source_sentences": source_sentences,
+                    "sentences": sentences,
+                    "predictions": [0.6945773363113403],
+                }
+            ),
+        )
+
     def test_text_classification_in_df(self):
         texts = ["I like you. I love you", "I don't like you. I hate you"]
         df = pd.DataFrame(texts, columns=['texts'])
@@ -66,6 +105,22 @@ class TestNLPInDF(unittest.TestCase):
                 {
                     "texts": texts,
                     "predictions": ["The answer to the universe is that we find the Universe, a very large, unchanging, infinitely intricate, incredibly complex place that could not have been created by God in the first place. We'll explore this in more detail at the end of this"],
+                }
+            ),
+        )
+
+    def test_zero_shot_classification_in_df(self):
+        texts = ["Hi, I recently bought a device from your company but it is not working as advertised and I would like to get reimbursed!"]
+        df = pd.DataFrame(texts, columns=['texts'])
+
+        candidate_labels = ["refund", "legal", "faq"]
+
+        assert_frame_equal(
+            self.nlp.zero_shot_classification_in_df(df, 'texts', candidate_labels),
+            pd.DataFrame(
+                {
+                    "texts": texts,
+                    "predictions": ["refund"],
                 }
             ),
         )

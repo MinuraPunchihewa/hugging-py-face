@@ -25,21 +25,9 @@ class TestAudioProcessing(unittest.TestCase):
         self.assertEqual(
             self.ap.audio_classification(self.inputs),
             [
-                {
-                    'score': 0.996896505355835,
-                    'label': 'hap'
-                },
-                {
-                    'score': 0.0029580998234450817,
-                    'label': 'sad'
-                },
-                {
-                    'score': 9.905469050863758e-05,
-                    'label': 'neu'
-                },
-                {
-                    'score': 4.624614666681737e-05,
-                    'label': 'ang'
-                }
+                {'label': 'hap', 'score': 0.996896505355835},
+                {'label': 'sad', 'score': 0.002958094235509634},
+                {'label': 'neu', 'score': 9.905487240757793e-05},
+                {'label': 'ang', 'score': 4.624627763405442e-05}
             ],
         )

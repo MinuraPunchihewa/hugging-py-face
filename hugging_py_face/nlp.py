@@ -1,9 +1,18 @@
 import json
+import time
+import logging
 import requests
+import pandas as pd
+import logging.config
 from pandas import DataFrame
 from typing import Text, List, Dict, Optional, Union
 
 from .config_parser import ConfigParser
+from .exceptions import HTTPServiceUnavailableException
+
+logging_config_parser = ConfigParser('config/logging.yaml')
+logging.config.dictConfig(logging_config_parser.get_config_dict())
+logger = logging.getLogger()
 
 
 class NLP:
@@ -12,6 +21,8 @@ class NLP:
 
         config_parser = ConfigParser()
         self.config = config_parser.get_config_dict()
+
+        self.logger = logger
 
     def _query(self, inputs: Union[Text, List, Dict], parameters: Optional[Dict] = None, options: Optional[Dict] = None, model: Optional[Text] = None, task: Optional[Text] = None) -> Union[Dict, List]:
         api_url = f"{self.config['BASE_URL']}/{model if model is not None else self.config['TASK_MODEL_MAP'][task]}"
@@ -30,8 +41,23 @@ class NLP:
         if options is not None:
             data['options'] = options
 
-        response = requests.request("POST", api_url, headers=headers, data=json.dumps(data))
-        return json.loads(response.content.decode("utf-8"))
+        retries = 0
+
+        while retries < self.config['MAX_RETRIES']:
+            retries += 1
+
+            response = requests.request("POST", api_url, headers=headers, data=json.dumps(data))
+            if response.status_code == int(self.config['HTTP_SERVICE_UNAVAILABLE']):
+                self.logger.info(f"Status code: {response.status_code}.")
+                self.logger.info("Retrying..")
+                time.sleep(1)
+            else:
+                return json.loads(response.content.decode("utf-8"))
+
+        self.logger.info(f"Status code: {response.status_code}.")
+        self.logger.info("Connection to the server failed after reaching maximum retry attempts.")
+        self.logger.debug(f"Response: {json.loads(response.content.decode('utf-8'))}.")
+        raise HTTPServiceUnavailableException("The HTTP service is unavailable.")
 
     def _query_in_df(self, df: DataFrame, column: Text, parameters: Optional[Dict] = None, options: Optional[Dict] = None, model: Optional[Text] = None, task: Optional[Text] = None) -> Union[Dict, List]:
         return self._query(df[column].tolist(), parameters, options, model, task)
@@ -111,6 +137,66 @@ class NLP:
             task='question-answering'
         )
 
+    def question_answering_in_df(self, df: DataFrame, question_column: Text, context_column: Text, model: Optional[Text] = None) -> DataFrame:
+        """
+        Generate answers for a column of questions based on a provided column of context.
+
+        :param df: a pandas DataFrame containing the questions to be answered along with the relevant context.
+        :param question_column: the column containing the questions to be answered.
+        :param context_column: the column containing the relevant context for each question.
+        :param model: the model to use for the question answering task. If not provided, the recommended model from Hugging Face will be used.
+        :return: a pandas DataFrame with the answers for the questions. The answers will be added as a new column called 'predictions' to the original DataFrame.
+        """
+        answers = []
+        for index, row in df.iterrows():
+            answer = self._query(
+                {
+                    "question": row[question_column],
+                    "context": row[context_column]
+                },
+                model=model,
+                task='question-answering'
+            )
+            answers.append(answer['answer'])
+
+        df['predictions'] = answers
+        return df
+
+    def table_question_answering(self, question: Union[Text, List], table: Dict[Text, List], options: Optional[Dict] = None, model: Optional[Text] = None) -> List:
+        """
+
+        :param question: a string or a list of strings of the question(s) to be answered.
+        :param table: a dict of lists representing a table of data.
+        :param options: a dict of options. For more information, see the `detailed parameters for the table question answering task <https://huggingface.co/docs/api-inference/detailed_parameters#table-question-answering-task>`_.
+        :param model: the model to use for the table question answering task. If not provided, the recommended model from Hugging Face will be used.
+        :return: a dict or a list of dicts of the answers.
+        """
+        return self._query(
+            {
+                "query": question,
+                "table": table
+            },
+            options=options,
+            model=model,
+            task='table-question-answering'
+        )
+
+    def table_question_answering_task_in_df(self, df: DataFrame, question: Union[Text, List], options: Optional[Dict] = None, model: Optional[Text] = None) -> DataFrame:
+        answers = self._query(
+            {
+                "query": question,
+                "table": df.to_dict('list')
+            },
+            options=options,
+            model=model,
+            task='table-question-answering'
+        )
+
+        return pd.DataFrame({
+            "question": question,
+            "predictions": [answer['answer'] for answer in answers]
+        })
+
     def sentence_similarity(self, source_sentence: Text, sentences: List, options: Optional[Dict] = None, model: Optional[Text] = None) -> List:
         """
         Calculate the semantic similarity between one text and a list of other sentences by comparing their embeddings.
@@ -130,6 +216,32 @@ class NLP:
             model=model,
             task='sentence-similarity'
         )
+
+    def sentence_similarity_in_df(self, df: DataFrame, source_sentence_column: Text, sentence_column: Text, options: Optional[Dict] = None, model: Optional[Text] = None) -> DataFrame:
+        """
+        Calculate the semantic similarity between sentences in two columns by comparing their embeddings.
+
+        :param df: a pandas DataFrame containing the source sentences and the sentences to be compared against.
+        :param source_sentence_column: the column containing the strings that you wish to compare the other strings with.
+        :param sentence_column: the column containing the strings which will be compared against the source_sentence.
+        :param options: a dict of options. For more information, see the `detailed parameters for the sentence similarity task <https://huggingface.co/docs/api-inference/detailed_parameters#sentence-similarity-task>`_.
+        :param model: the model to use for the sentence similarity task. If not provided, the recommended model from Hugging Face will be used.
+        :return: a pandas DataFrame with the similarity scores for the sentences. The scores will be added as a new column called 'predictions' to the original DataFrame.
+        """
+        scores = []
+        for index, row in df.iterrows():
+            score = self._query(
+                {
+                    "source_sentence": row[source_sentence_column],
+                    "sentences": [row[sentence_column]]
+                },
+                model=model,
+                task='sentence-similarity'
+            )
+            scores.append(score[0])
+
+        df['predictions'] = scores
+        return df
 
     def text_classification(self, text: Union[Text, List], options: Optional[Dict] = None, model: Optional[Text] = None) -> Union[Dict, List]:
         """
@@ -203,6 +315,22 @@ class NLP:
             model=model,
             task='zero-shot-classification'
         )
+
+    def zero_shot_classification_in_df(self, df: DataFrame, column: Text, candidate_labels: List, parameters: Optional[Dict] = {}, options: Optional[Dict] = None, model: Optional[Text] = None):
+        """
+
+        :param df: a pandas DataFrame containing the strings to be classified.
+        :param column: the column containing the strings to be classified.
+        :param candidate_labels: a list of strings that are potential classes for inputs.
+        :param parameters: a dict of parameters excluding candidate_labels which is passed in as a separate argument. For more information, see the `detailed parameters for the zero shot classification task <https://huggingface.co/docs/api-inference/detailed_parameters#zeroshot-classification-task>`_.
+        :param options: a dict of options. For more information, see the `detailed parameters for the zero shot classification task <https://huggingface.co/docs/api-inference/detailed_parameters#zeroshot-classification-task>`_.
+        :param model: the model to use for the zero shot classification task. If not provided, the recommended model from Hugging Face will be used.
+        :return: a pandas DataFrame with the classifications. The classifications will be added as a new column called 'predictions' to the original DataFrame.
+        """
+        parameters['candidate_labels'] = candidate_labels
+        predictions = self._query_in_df(df, column, parameters=parameters, options=options, model=model, task='zero-shot-classification')
+        df['predictions'] = [prediction['labels'][0] for prediction in predictions]
+        return df
 
     def conversational(self, text: Union[Text, List], past_user_inputs: Optional[List] = None, generated_responses: Optional[List] = None, parameters: Optional[Dict] = None, options: Optional[Dict] = None, model: Optional[Text] = None) -> Union[Dict, List]:
         """
