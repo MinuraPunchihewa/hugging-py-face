@@ -3,6 +3,7 @@ import unittest
 from dotenv import load_dotenv
 
 from hugging_py_face.nlp import NLP
+from hugging_py_face.exceptions import HTTPServiceUnavailableException
 
 load_dotenv()
 
@@ -66,16 +67,18 @@ class TestNLP(unittest.TestCase):
     def test_question_answering(self):
         question = "What's my name?"
         context = "My name is Clara and I live in Berkeley"
-
-        self.assertEqual(
-            self.nlp.question_answering(question, context),
-            {
-                "score": 0.7940344214439392,
-                "start": 11,
-                "end": 16,
-                "answer": "Clara"
-            }
-        )
+        try:
+            self.assertEqual(
+                self.nlp.question_answering(question, context),
+                {
+                    "score": 0.7940344214439392,
+                    "start": 11,
+                    "end": 16,
+                    "answer": "Clara"
+                }
+            )
+        except HTTPServiceUnavailableException:
+            self.assertRaises(HTTPServiceUnavailableException, lambda: self.nlp.question_answering(question, context))
 
     def test_table_question_answering(self):
         question = "How many stars does the transformers repository have?"
