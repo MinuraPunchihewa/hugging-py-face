@@ -12,7 +12,7 @@ from .exceptions import HTTPServiceUnavailableException
 
 logging_config_parser = ConfigParser('config/logging.yaml')
 logging.config.dictConfig(logging_config_parser.get_config_dict())
-logger = logging.getLogger(__name__)
+logger = logging.getLogger()
 
 
 class NLP:
@@ -21,6 +21,8 @@ class NLP:
 
         config_parser = ConfigParser()
         self.config = config_parser.get_config_dict()
+
+        self.logger = logger
 
     def _query(self, inputs: Union[Text, List, Dict], parameters: Optional[Dict] = None, options: Optional[Dict] = None, model: Optional[Text] = None, task: Optional[Text] = None) -> Union[Dict, List]:
         api_url = f"{self.config['BASE_URL']}/{model if model is not None else self.config['TASK_MODEL_MAP'][task]}"
@@ -46,15 +48,15 @@ class NLP:
 
             response = requests.request("POST", api_url, headers=headers, data=json.dumps(data))
             if response.status_code == int(self.config['HTTP_SERVICE_UNAVAILABLE']):
-                logger.info(f"Status code: {response.status_code}.")
-                logger.info("Retrying..")
+                self.logger.info(f"Status code: {response.status_code}.")
+                self.logger.info("Retrying..")
                 time.sleep(1)
             else:
                 return json.loads(response.content.decode("utf-8"))
 
-        logger.info(f"Status code: {response.status_code}.")
-        logger.info("Connection to the server failed after reaching maximum retry attempts.")
-        logger.debug(f"Response: {json.loads(response.content.decode('utf-8'))}.")
+        self.logger.info(f"Status code: {response.status_code}.")
+        self.logger.info("Connection to the server failed after reaching maximum retry attempts.")
+        self.logger.debug(f"Response: {json.loads(response.content.decode('utf-8'))}.")
         raise HTTPServiceUnavailableException("The HTTP service is unavailable.")
 
     def _query_in_df(self, df: DataFrame, column: Text, parameters: Optional[Dict] = None, options: Optional[Dict] = None, model: Optional[Text] = None, task: Optional[Text] = None) -> Union[Dict, List]:
