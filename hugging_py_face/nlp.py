@@ -52,7 +52,7 @@ class NLP:
             else:
                 return json.loads(response.content.decode("utf-8"))
 
-        self._logger.debug(f"Status code: {json.loads(response.content.decode('utf-8'))}.")
+        self._logger.debug(f"Response: {json.loads(response.content.decode('utf-8'))}.")
         raise HTTPServiceUnavailableException("The HTTP service is unavailable.")
 
     def _query_in_df(self, df: DataFrame, column: Text, parameters: Optional[Dict] = None, options: Optional[Dict] = None, model: Optional[Text] = None, task: Optional[Text] = None) -> Union[Dict, List]:
