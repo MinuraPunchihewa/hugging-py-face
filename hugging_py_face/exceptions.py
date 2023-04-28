@@ -1,0 +1,3 @@
+
+class HTTPServiceUnavailableException(Exception):
+    pass
