@@ -235,6 +235,7 @@ class NLP:
                     "source_sentence": row[source_sentence_column],
                     "sentences": [row[sentence_column]]
                 },
+                options=options,
                 model=model,
                 task='sentence-similarity'
             )
