@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 from pandas.testing import assert_frame_equal
 
 from hugging_py_face.computer_vision import ComputerVision
+from hugging_py_face.exceptions import HTTPServiceUnavailableException
 
 load_dotenv()
 
@@ -18,12 +19,15 @@ class TestComputerVisionInDF(unittest.TestCase):
     def test_image_classification_in_df(self):
         df = pd.DataFrame(self.inputs, columns=['inputs'])
 
-        assert_frame_equal(
-            self.cp.image_classification_in_df(df, 'inputs'),
-            pd.DataFrame(
-                {
-                    "inputs": self.inputs,
-                    "predictions": ["golden retriever"],
-                }
-            ),
-        )
+        try:
+            assert_frame_equal(
+                self.cp.image_classification_in_df(df, 'inputs'),
+                pd.DataFrame(
+                    {
+                        "inputs": self.inputs,
+                        "predictions": ["golden retriever"],
+                    }
+                ),
+            )
+        except HTTPServiceUnavailableException:
+            self.assertRaises(HTTPServiceUnavailableException, lambda: self.cp.image_classification_in_df(df, 'inputs'))
