@@ -43,6 +43,6 @@ class ComputerVision(MultimediaProcessing):
         :return: a list of dictionaries each containing the label, the confidence score for that label, and the bounding box coordinates.
         """
         if type(inputs) == list:
-            return self._query(inputs, model=model, task="object-detection")
+            return self._query_in_list(inputs, model=model, task="object-detection")
         elif type(inputs) == str:
             return self._query(inputs, model=model, task="object-detection")
