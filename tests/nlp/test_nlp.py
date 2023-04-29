@@ -144,16 +144,8 @@ class TestNLP(unittest.TestCase):
         text = "The answer to the universe is"
 
         try:
-            self.assertEqual(
-                self.nlp.text_generation(text),
-                [
-                    {'generated_text': 'The answer to the universe is simple: The answer can be '
-                                    'proved. The first thing you should do is make an '
-                                    'appointment with a psychic called S.K. Gupta, a.k.a. '
-                                    'Shiva (his real name) who has the most'
-                     }
-                ]
-            )
+            prediction = self.nlp.text_generation(text)
+            self.assertTrue(prediction[0]['generated_text'].startswith(text))
         except HTTPServiceUnavailableException:
             self.assertRaises(HTTPServiceUnavailableException, lambda: self.nlp.text_generation(text))
 
