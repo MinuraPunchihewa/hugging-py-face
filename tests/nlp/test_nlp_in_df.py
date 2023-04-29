@@ -121,7 +121,7 @@ class TestNLPInDF(unittest.TestCase):
                 pd.DataFrame(
                     {
                         "texts": texts,
-                        "predictions": ["The answer to the universe is that we find the Universe, a very large, unchanging, infinitely intricate, incredibly complex place that could not have been created by God in the first place. We'll explore this in more detail at the end of this"],
+                        "predictions": ["The answer to the universe is not a random, \"good and bad.\" At least not yet.\n\nIf you're the kind of guy who enjoys reading at least one novel an hour, you would better be getting into it. But you're"],
                     }
                 ),
             )
