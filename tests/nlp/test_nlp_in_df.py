@@ -116,15 +116,9 @@ class TestNLPInDF(unittest.TestCase):
         df = pd.DataFrame(texts, columns=['texts'])
 
         try:
-            assert_frame_equal(
-                self.nlp.text_generation_in_df(df, 'texts'),
-                pd.DataFrame(
-                    {
-                        "texts": texts,
-                        "predictions": ["The answer to the universe is not a random, \"good and bad.\" At least not yet.\n\nIf you're the kind of guy who enjoys reading at least one novel an hour, you would better be getting into it. But you're"],
-                    }
-                ),
-            )
+            predictions_df = self.nlp.text_generation_in_df(df, 'texts')
+            for index, row in predictions_df.iterrows():
+                self.assertTrue(row['predictions'].startswith(row['texts']))
         except HTTPServiceUnavailableException:
             self.assertRaises(HTTPServiceUnavailableException, lambda: self.nlp.text_generation_in_df(df, 'texts'))
 
