@@ -1,28 +1,20 @@
 import json
 import time
-import logging
 import requests
-import logging.config
 from typing import Text, Dict, List, Optional, Union
 
-from .config_parser import ConfigParser
+from .base_api import BaseAPI
 from .exceptions import HTTPServiceUnavailableException
 
-logging_config_parser = ConfigParser('config/logging.yaml')
-logging.config.dictConfig(logging_config_parser.get_config_dict())
-logger = logging.getLogger()
 
-
-class MultimediaProcessing:
+class MultimediaProcessing(BaseAPI):
     def __init__(self, api_token):
-        self.api_token = api_token
-
-        config_parser = ConfigParser()
-        self.config = config_parser.get_config_dict()
-
-        self.logger = logger
+        super().__init__(api_token)
 
     def _query(self, input: Text, model: Optional[Text] = None, task: Optional[Text] = None) -> Union[Dict, List]:
+        if model:
+            self._check_model_task_match(model, task)
+
         api_url = f"{self.config['BASE_URL']}/{model if model is not None else self.config['TASK_MODEL_MAP'][task]}"
 
         headers = {
