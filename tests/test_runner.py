@@ -12,7 +12,7 @@ logger = logging.getLogger()
 
 def run_tests():
     loader = unittest.TestLoader()
-    suite = loader.discover(".")
+    suite = loader.discover("tests")
     runner = unittest.TextTestRunner()
     result = runner.run(suite)
 
