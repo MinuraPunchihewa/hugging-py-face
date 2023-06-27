@@ -30,7 +30,7 @@ class TestAudioProcessingInDF(unittest.TestCase):
                 ),
             )
         except HTTPServiceUnavailableException:
-            self.assertRaises(HTTPServiceUnavailableException, lambda: self.ap.speech_recognition_in_df(df, 'inputs'))
+            self.assertRaises(HTTPServiceUnavailableException, lambda: self.ap.automatic_speech_recognition_in_df(df, 'inputs'))
 
     def test_audio_classification_in_df(self):
         df = pd.DataFrame(self.inputs, columns=['inputs'])
