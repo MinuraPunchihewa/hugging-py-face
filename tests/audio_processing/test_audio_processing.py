@@ -14,10 +14,10 @@ class TestAudioProcessing(unittest.TestCase):
         cls.ap = AudioProcessing(os.environ.get("API_KEY"))
         cls.inputs = os.path.join(os.path.dirname(__file__), '..', 'resources', 'amused.wav')
 
-    def test_speech_recognition(self):
+    def test_automatic_speech_recognition(self):
         try:
             self.assertEqual(
-                self.ap.speech_recognition(self.inputs),
+                self.ap.automatic_speech_recognition(self.inputs),
                 {
                     'text': 'I AM PLAYING A SINGLE HAND IN IT LOOKS LIKE A LOSING GAME'
                 },

@@ -16,12 +16,12 @@ class TestAudioProcessingInDF(unittest.TestCase):
         cls.ap = AudioProcessing(os.environ.get("API_KEY"))
         cls.inputs = [os.path.join(os.path.dirname(__file__), '..', 'resources', 'amused.wav')]
 
-    def test_speech_recognition_in_df(self):
+    def test_automatic_speech_recognition_in_df(self):
         df = pd.DataFrame(self.inputs, columns=['inputs'])
 
         try:
             assert_frame_equal(
-                self.ap.speech_recognition_in_df(df, 'inputs'),
+                self.ap.automatic_speech_recognition_in_df(df, 'inputs'),
                 pd.DataFrame(
                     {
                         "inputs": self.inputs,
