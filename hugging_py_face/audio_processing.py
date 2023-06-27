@@ -8,7 +8,7 @@ class AudioProcessing(MultimediaProcessing):
     def __init__(self, api_token):
         super().__init__(api_token)
 
-    def speech_recognition(self, inputs: Union[Text, List], model: Optional[Text] = None) -> Union[Dict, List]:
+    def automatic_speech_recognition(self, inputs: Union[Text, List], model: Optional[Text] = None) -> Union[Dict, List]:
         """
         Perform speech recognition on an audio file from a file path or an url.
 
@@ -17,11 +17,11 @@ class AudioProcessing(MultimediaProcessing):
         :return: a dictionary or a list of dictionaries containing the text recognized from the audio file(s).
         """
         if type(inputs) == list:
-            return self._query_in_list(inputs, model=model, task="speech-recognition")
+            return self._query_in_list(inputs, model=model, task="automatic-speech-recognition")
         elif type(inputs) == str:
-            return self._query(inputs, model=model, task="speech-recognition")
+            return self._query(inputs, model=model, task="automatic-speech-recognition")
 
-    def speech_recognition_in_df(self, df: DataFrame, column: Text, model: Optional[Text] = None) -> DataFrame:
+    def automatic_speech_recognition_in_df(self, df: DataFrame, column: Text, model: Optional[Text] = None) -> DataFrame:
         """
         Perform speech recognition on audio files from a DataFrame.
 
@@ -30,7 +30,7 @@ class AudioProcessing(MultimediaProcessing):
         :param model: the model to use for the speech recognition task. If not provided, the recommended model from Hugging Face will be used.
         :return: a pandas DataFrame with the text recognized from the audio files. The text will be added as a new column called 'predictions' to the original DataFrame.
         """
-        predictions = self._query_in_df(df, column, model=model, task="speech-recognition")
+        predictions = self._query_in_df(df, column, model=model, task="automatic-speech-recognition")
         df["predictions"] = [prediction['text'] for prediction in predictions]
         return df
 

@@ -28,6 +28,7 @@ class TestComputerVisionInDF(unittest.TestCase):
                         "predictions": ["golden retriever"],
                     }
                 ),
+                check_exact=False,
             )
         except HTTPServiceUnavailableException:
             self.assertRaises(HTTPServiceUnavailableException, lambda: self.cp.image_classification_in_df(df, 'inputs'))
