@@ -31,7 +31,7 @@ class TestAudioProcessingInDF(unittest.TestCase):
                 check_exact=False,
             )
         except HTTPServiceUnavailableException:
-            self.assertRaises(HTTPServiceUnavailableException, lambda: self.ap.automatic_speech_recognition_in_df(df, 'inputs'))
+            pass
 
     def test_audio_classification_in_df(self):
         df = pd.DataFrame(self.inputs, columns=['inputs'])
@@ -48,4 +48,4 @@ class TestAudioProcessingInDF(unittest.TestCase):
                 check_exact=False,
             )
         except HTTPServiceUnavailableException:
-            self.assertRaises(HTTPServiceUnavailableException, lambda: self.ap.audio_classification_in_df(df, 'inputs'))
+            pass

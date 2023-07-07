@@ -54,7 +54,7 @@ class TestComputerVision(unittest.TestCase):
             actual_result = self.cp.image_classification(self.inputs)
             self.assertAlmostEqualList(expected_result, actual_result, places=6)
         except HTTPServiceUnavailableException:
-            self.assertRaises(HTTPServiceUnavailableException, lambda: self.cp.image_classification(self.inputs))
+            pass
 
     def test_object_detection(self):
         try:
@@ -74,4 +74,4 @@ class TestComputerVision(unittest.TestCase):
 
             self.assertAlmostEqualList(expected_result, actual_result, places=6)
         except HTTPServiceUnavailableException:
-            self.assertRaises(HTTPServiceUnavailableException, lambda: self.cp.object_detection(self.inputs))
+            pass

@@ -6,7 +6,7 @@ from pandas import DataFrame
 from typing import Text, List, Dict, Optional, Union
 
 from .base_api import BaseAPI
-from .exceptions import HTTPServiceUnavailableException
+from .exceptions import HTTPServiceUnavailableException, APICallException
 
 
 class NLP(BaseAPI):
@@ -43,8 +43,11 @@ class NLP(BaseAPI):
                 self.logger.info(f"Status code: {response.status_code}.")
                 self.logger.info("Retrying..")
                 time.sleep(1)
-            else:
+            elif response.status_code == 200:
                 return json.loads(response.content.decode("utf-8"))
+            else:
+                self.logger.info(f"Status code: {response.status_code}.")
+                raise APICallException(f"API call failed with status code {response.status_code}.")
 
         self.logger.info(f"Status code: {response.status_code}.")
         self.logger.info("Connection to the server failed after reaching maximum retry attempts.")

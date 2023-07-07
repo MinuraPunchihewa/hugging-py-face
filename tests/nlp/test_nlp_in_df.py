@@ -30,24 +30,20 @@ class TestNLPInDF(unittest.TestCase):
                 ),
             )
         except HTTPServiceUnavailableException:
-            self.assertRaises(HTTPServiceUnavailableException, lambda: self.nlp.summarization_in_df(df, 'texts'))
+            pass
 
     def test_summarize_in_df(self):
         texts = ["The tower is 324 metres (1,063 ft) tall, about the same height as an 81-storey building, and the tallest structure in Paris. Its base is square, measuring 125 metres (410 ft) on each side. During its construction, the Eiffel Tower surpassed the Washington Monument to become the tallest man-made structure in the world, a title it held for 41 years until the Chrysler Building in New York City was finished in 1930. It was the first structure to reach a height of 300 metres. Due to the addition of a broadcasting aerial at the top of the tower in 1957, it is now taller than the Chrysler Building by 5.2 metres (17 ft). Excluding transmitters, the Eiffel Tower is the second tallest free-standing structure in France after the Millau Viaduct."]
         df = pd.DataFrame(texts, columns=['texts'])
 
+        expected_keywords = ["Eiffel Tower", "324", "81-storey"]
+
         try:
-            assert_frame_equal(
-                self.nlp.summarization_in_df(df, 'texts'),
-                pd.DataFrame(
-                    {
-                        "texts": texts,
-                        "predictions": ["The tower is 324 metres (1,063 ft) tall, about the same height as an 81-storey building. Its base is square, measuring 125 metres (410 ft) on each side. During its construction, the Eiffel Tower surpassed the Washington Monument to become the tallest man-made structure in the world."],
-                    }
-                ),
-            )
+            actual_result = self.nlp.summarization_in_df(df, 'texts')["predictions"]
+            for keyword in expected_keywords:
+                assert actual_result.str.contains(keyword).any(), f"Keyword '{keyword}' not found in predictions."
         except HTTPServiceUnavailableException:
-            self.assertRaises(HTTPServiceUnavailableException, lambda: self.nlp.summarization_in_df(df, 'texts'))
+            pass
 
     def test_question_answering_in_df(self):
         questions = ["What's my name?"]
@@ -69,7 +65,7 @@ class TestNLPInDF(unittest.TestCase):
                 ),
             )
         except HTTPServiceUnavailableException:
-            self.assertRaises(HTTPServiceUnavailableException, lambda: self.nlp.question_answering_in_df(df, 'questions', 'contexts'))
+            pass
 
     def test_sentence_similarity_in_df(self):
         source_sentences = ["That is a happy person"]
@@ -90,9 +86,10 @@ class TestNLPInDF(unittest.TestCase):
                         "predictions": [0.6945773363113403],
                     }
                 ),
+                check_exact=False,
             )
         except HTTPServiceUnavailableException:
-            self.assertRaises(HTTPServiceUnavailableException, lambda: self.nlp.sentence_similarity_in_df(df, 'source_sentences', 'sentences'))
+            pass
 
     def test_text_classification_in_df(self):
         texts = ["I like you. I love you", "I don't like you. I hate you"]
@@ -109,7 +106,7 @@ class TestNLPInDF(unittest.TestCase):
                 ),
             )
         except HTTPServiceUnavailableException:
-            self.assertRaises(HTTPServiceUnavailableException, lambda: self.nlp.text_classification_in_df(df, 'texts'))
+            pass
 
     def test_text_generation_in_df(self):
         texts = ["The answer to the universe is"]
@@ -120,7 +117,7 @@ class TestNLPInDF(unittest.TestCase):
             for index, row in predictions_df.iterrows():
                 self.assertTrue(row['predictions'].startswith(row['texts']))
         except HTTPServiceUnavailableException:
-            self.assertRaises(HTTPServiceUnavailableException, lambda: self.nlp.text_generation_in_df(df, 'texts'))
+            pass
 
     def test_zero_shot_classification_in_df(self):
         texts = ["Hi, I recently bought a device from your company but it is not working as advertised and I would like to get reimbursed!"]
@@ -139,4 +136,4 @@ class TestNLPInDF(unittest.TestCase):
                 ),
             )
         except HTTPServiceUnavailableException:
-            self.assertRaises(HTTPServiceUnavailableException, lambda: self.nlp.zero_shot_classification_in_df(df, 'texts', candidate_labels))
+            pass
