@@ -5,3 +5,7 @@ class HTTPServiceUnavailableException(Exception):
 
 class TaskModelMismatchException(Exception):
     pass
+
+
+class APICallException(Exception):
+    pass
