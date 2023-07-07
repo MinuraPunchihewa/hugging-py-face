@@ -29,7 +29,7 @@ class TestAudioProcessing(unittest.TestCase):
                 },
             )
         except HTTPServiceUnavailableException:
-            self.assertRaises(HTTPServiceUnavailableException, lambda: self.ap.automatic_speech_recognition(self.inputs))
+            pass
 
     def test_audio_classification(self):
         try:
@@ -43,4 +43,4 @@ class TestAudioProcessing(unittest.TestCase):
             actual_result = self.ap.audio_classification(self.inputs)
             self.assertAlmostEqualList(expected_result, actual_result)
         except HTTPServiceUnavailableException:
-            self.assertRaises(HTTPServiceUnavailableException, lambda: self.ap.audio_classification(self.inputs))
+            pass
