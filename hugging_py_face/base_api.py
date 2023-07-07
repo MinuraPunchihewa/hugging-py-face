@@ -20,9 +20,10 @@ class BaseAPI:
 
         self.logger = logger
 
+        self.hf_api = HfApi()
+
     def _check_model_task_match(self, model: Text, task: Text) -> None:
-        hf_api = HfApi()
-        metadata = hf_api.model_info(model)
+        metadata = self.hf_api.model_info(model)
         if task != metadata.pipeline_tag:
             raise TaskModelMismatchException(f"The task {task} is not supported by the model {model}.")
 
