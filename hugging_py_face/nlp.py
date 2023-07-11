@@ -10,14 +10,14 @@ from .exceptions import HTTPServiceUnavailableException, APICallException
 
 
 class NLP(BaseAPI):
-    def __init__(self, api_token):
-        super().__init__(api_token)
+    def __init__(self, api_token: Text, api_url: Optional[Text] = None):
+        super().__init__(api_token, api_url)
 
     def _query(self, inputs: Union[Text, List, Dict], parameters: Optional[Dict] = None, options: Optional[Dict] = None, model: Optional[Text] = None, task: Optional[Text] = None) -> Union[Dict, List]:
         if model:
             self._check_model_task_match(model, task)
 
-        api_url = f"{self.config['BASE_URL']}/{model if model is not None else self.config['TASK_MODEL_MAP'][task]}"
+        api_url = f"{self.api_url}/{model if model is not None else self.config['TASK_MODEL_MAP'][task]}"
 
         headers = {
             "Authorization": f"Bearer {self.api_token}"
