@@ -1,7 +1,7 @@
 import logging
 import logging.config
 from huggingface_hub import HfApi
-from typing import Text
+from typing import Text, Optional
 
 from .config_parser import ConfigParser
 from .exceptions import TaskModelMismatchException
@@ -12,11 +12,16 @@ logger = logging.getLogger()
 
 
 class BaseAPI:
-    def __init__(self, api_token):
+    def __init__(self, api_token: Text, api_url: Optional[Text] = None):
         self.api_token = api_token
 
         config_parser = ConfigParser()
         self.config = config_parser.get_config_dict()
+
+        if api_url:
+            self.api_url = api_url
+        else:
+            self.api_url = self.config['BASE_URL']
 
         self.logger = logger
 
