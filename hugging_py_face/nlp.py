@@ -374,8 +374,8 @@ class NLP(BaseAPI):
         Translates text from one language to another.
 
         :param text: a string or a list of strings to translate.
-        :param lang_input: the language of the input text.
-        :param lang_output: the language to translate the input text to.
+        :param lang_input: the short code of the language of the input text.
+        :param lang_output: the short code of the language to translate the input text to.
         :param options: a dict of options. For more information, see the `detailed parameters for the translation task <https://huggingface.co/docs/api-inference/detailed_parameters#translation-task>`_.
         :param model: the model to use for the translation task. If not provided, the recommended model from Hugging Face will be used.
         :return: a dict or a list of dicts containing the translated text.
