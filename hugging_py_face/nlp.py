@@ -385,3 +385,24 @@ class NLP(BaseAPI):
             return self._query(text, options=options, model=model, task='translation')
         else:
             return self._query(text, options=options, model=model, task='translation')
+
+    def translation_in_df(self, df: DataFrame, column: Text, lang_input: Text, lang_output: Text, options: Optional[Dict] = None, model: Optional[Text] = None) -> DataFrame:
+        """
+        Translates text from one language to another.
+
+        :param df: a pandas DataFrame containing the strings to be translated.
+        :param column: the column containing the strings to be translated.
+        :param lang_input: the short code of the language of the input text.
+        :param lang_output: the short code of the language to translate the input text to.
+        :param options: a dict of options. For more information, see the `detailed parameters for the translation task <https://huggingface.co/docs/api-inference/detailed_parameters#translation-task>`_.
+        :param model: the model to use for the translation task. If not provided, the recommended model from Hugging Face will be used.
+        :return: a pandas DataFrame with the translations. The translations will be added as a new column called 'predictions' to the original DataFrame.
+        """
+        if model is None:
+            model = f"{self.config['TASK_MODEL_MAP']['translation']}{lang_input}-{lang_output}"
+            predictions = self._query_in_df(df, column, options=options, model=model, task='translation')
+        else:
+            predictions = self._query_in_df(df, column, options=options, model=model, task='translation')
+
+        df['predictions'] = [prediction['translation_text'] for prediction in predictions]
+        return df
