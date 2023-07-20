@@ -137,3 +137,20 @@ class TestNLPInDF(unittest.TestCase):
             )
         except HTTPServiceUnavailableException:
             pass
+
+    def test_translation_in_df(self):
+        texts = ["I like to play football"]
+        df = pd.DataFrame(texts, columns=['texts'])
+
+        try:
+            assert_frame_equal(
+                self.nlp.translation_in_df(df, 'texts', "en", "fr"),
+                pd.DataFrame(
+                    {
+                        "texts": texts,
+                        "predictions": ["J'aime jouer au football."],
+                    }
+                ),
+            )
+        except HTTPServiceUnavailableException:
+            pass

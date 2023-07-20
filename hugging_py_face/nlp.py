@@ -368,3 +368,41 @@ class NLP(BaseAPI):
         :return: a list of dicts or a list of lists (of dicts) containing the representation of the features of the input(s).
         """
         return self._query(text, options=options, model=model, task='feature-extraction')
+
+    def translation(self, text: Union[Text, List], lang_input: Text, lang_output: Text, options: Optional[Dict] = None, model: Optional[Text] = None) -> Union[Dict, List]:
+        """
+        Translates text from one language to another.
+
+        :param text: a string or a list of strings to translate.
+        :param lang_input: the short code of the language of the input text.
+        :param lang_output: the short code of the language to translate the input text to.
+        :param options: a dict of options. For more information, see the `detailed parameters for the translation task <https://huggingface.co/docs/api-inference/detailed_parameters#translation-task>`_.
+        :param model: the model to use for the translation task. If not provided, the recommended model from Hugging Face will be used.
+        :return: a dict or a list of dicts containing the translated text.
+        """
+        if model is None:
+            model = f"{self.config['TASK_MODEL_MAP']['translation']}{lang_input}-{lang_output}"
+            return self._query(text, options=options, model=model, task='translation')
+        else:
+            return self._query(text, options=options, model=model, task='translation')
+
+    def translation_in_df(self, df: DataFrame, column: Text, lang_input: Text, lang_output: Text, options: Optional[Dict] = None, model: Optional[Text] = None) -> DataFrame:
+        """
+        Translates text from one language to another.
+
+        :param df: a pandas DataFrame containing the strings to be translated.
+        :param column: the column containing the strings to be translated.
+        :param lang_input: the short code of the language of the input text.
+        :param lang_output: the short code of the language to translate the input text to.
+        :param options: a dict of options. For more information, see the `detailed parameters for the translation task <https://huggingface.co/docs/api-inference/detailed_parameters#translation-task>`_.
+        :param model: the model to use for the translation task. If not provided, the recommended model from Hugging Face will be used.
+        :return: a pandas DataFrame with the translations. The translations will be added as a new column called 'predictions' to the original DataFrame.
+        """
+        if model is None:
+            model = f"{self.config['TASK_MODEL_MAP']['translation']}{lang_input}-{lang_output}"
+            predictions = self._query_in_df(df, column, options=options, model=model, task='translation')
+        else:
+            predictions = self._query_in_df(df, column, options=options, model=model, task='translation')
+
+        df['predictions'] = [prediction['translation_text'] for prediction in predictions]
+        return df

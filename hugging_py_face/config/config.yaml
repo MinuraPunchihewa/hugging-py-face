@@ -14,5 +14,6 @@ TASK_MODEL_MAP:
   object-detection: facebook/detr-resnet-50
   automatic-speech-recognition: facebook/wav2vec2-base-960h
   audio-classification: superb/hubert-large-superb-er
+  translation: Helsinki-NLP/opus-mt-
 MAX_RETRIES: 5
 HTTP_SERVICE_UNAVAILABLE: 503

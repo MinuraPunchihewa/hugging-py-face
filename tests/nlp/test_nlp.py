@@ -250,3 +250,17 @@ class TestNLP(unittest.TestCase):
         except HTTPServiceUnavailableException:
             pass
 
+    def test_translation(self):
+        text = "I like to play football"
+
+        try:
+            self.assertEqual(
+                self.nlp.translation(text, "en", "fr"),
+                [
+                    {
+                        "translation_text": "J'aime jouer au football.",
+                    }
+                ],
+            )
+        except HTTPServiceUnavailableException:
+            pass
