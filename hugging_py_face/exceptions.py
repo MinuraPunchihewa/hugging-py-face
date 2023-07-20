@@ -9,3 +9,7 @@ class TaskModelMismatchException(Exception):
 
 class APICallException(Exception):
     pass
+
+
+class InsufficientParametersException(Exception):
+    pass
