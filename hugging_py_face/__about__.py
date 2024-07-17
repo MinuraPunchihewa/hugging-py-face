@@ -6,5 +6,5 @@ __email__ = "minurapunchihewa17@gmail.com"
 __author__ = 'Minura Punchihewa'
 __github__ = 'https://github.com/MinuraPunchihewa/hugging_py_face'
 __pypi__ = 'https://pypi.org/project/hugging-py-face/'
-__license__ = 'GPL-3.0'
-__copyright__ = 'Copyright (C) 2023  Minura Punchihewa'
+__license__ = 'MIT'
+__copyright__ = 'Copyright (C) 2024  Minura Punchihewa'
