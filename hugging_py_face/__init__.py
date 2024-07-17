@@ -1,8 +1,8 @@
 import inspect
 
-from .nlp import NLP
-from .computer_vision import ComputerVision
-from .audio_processing import AudioProcessing
+from hugging_py_face.nlp import NLP
+from hugging_py_face.computer_vision import ComputerVision
+from hugging_py_face.audio_processing import AudioProcessing
 
 from .config_parser import ConfigParser
 
