@@ -1,3 +1,4 @@
+import json
 import logging
 import logging.config
 from huggingface_hub import HfApi
@@ -31,4 +32,14 @@ class BaseAPI:
         metadata = self.hf_api.model_info(model)
         if task != metadata.pipeline_tag:
             raise TaskModelMismatchException(f"The task {task} is not supported by the model {model}.")
+        
+    def _extract_error_message(self, response):
+        content = response.content.decode("utf-8")
+
+        try:
+            error_message = json.loads(content)['error']
+        except json.JSONDecodeError:
+            error_message = content
+
+        return error_message
 

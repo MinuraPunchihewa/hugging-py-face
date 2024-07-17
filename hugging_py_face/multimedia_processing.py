@@ -45,7 +45,8 @@ class MultimediaProcessing(BaseAPI):
             return json.loads(response.content.decode("utf-8"))
         else:
             self.logger.info(f"Status code: {response.status_code}.")
-            raise APICallException(f"API call failed with the error: {json.loads(response.content.decode('utf-8'))['error']}.")
+            error_message = self._extract_error_message(response)
+            raise APICallException(f"API call failed with the error: {error_message}.")
 
         self.logger.info(f"Status code: {response.status_code}.")
         self.logger.info("Connection to the server failed after reaching maximum retry attempts.")
