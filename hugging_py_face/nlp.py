@@ -59,7 +59,7 @@ class NLP(BaseAPI):
         raise HTTPServiceUnavailableException("The HTTP service is unavailable.")
 
     def _query_in_df(self, df: DataFrame, column: Text, parameters: Optional[Dict] = None, options: Optional[Dict] = None, model: Optional[Text] = None, task: Optional[Text] = None, extra_headers: Optional[Dict] = None) -> Union[Dict, List]:
-        return self._query(df[column].tolist(), parameters, options, model, task)
+        return self._query(df[column].tolist(), parameters, options, model, task, extra_headers)
 
     def fill_mask(self, text: Union[Text, List], options: Optional[Dict] = None, model: Optional[Text] = None) -> List:
         """
