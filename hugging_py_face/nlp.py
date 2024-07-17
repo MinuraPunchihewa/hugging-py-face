@@ -408,7 +408,7 @@ class NLP(BaseAPI):
         """
         if model is None:
             if lang_input is None or lang_output is None:
-                InsufficientParametersException("lang_input and lang_output are required if model is not provided.")
+                raise InsufficientParametersException("lang_input and lang_output are required if model is not provided.")
             model = f"{self.config['TASK_MODEL_MAP']['translation']}{lang_input}-{lang_output}"
             return self._query(text, options=options, model=model, task='translation')
         else:
@@ -428,7 +428,7 @@ class NLP(BaseAPI):
         """
         if model is None:
             if lang_input is None or lang_output is None:
-                InsufficientParametersException("lang_input and lang_output are required if model is not provided.")
+                raise InsufficientParametersException("lang_input and lang_output are required if model is not provided.")
             model = f"{self.config['TASK_MODEL_MAP']['translation']}{lang_input}-{lang_output}"
             predictions = self._query_in_df(df, column, options=options, model=model, task='translation')
         else:
