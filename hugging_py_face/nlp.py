@@ -13,7 +13,7 @@ class NLP(BaseAPI):
     def __init__(self, api_token: Text, api_url: Optional[Text] = None):
         super().__init__(api_token, api_url)
 
-    def _query(self, inputs: Union[Text, List, Dict], parameters: Optional[Dict] = None, options: Optional[Dict] = None, model: Optional[Text] = None, task: Optional[Text] = None) -> Union[Dict, List]:
+    def _query(self, inputs: Union[Text, List, Dict], parameters: Optional[Dict] = None, options: Optional[Dict] = None, model: Optional[Text] = None, task: Optional[Text] = None, extra_headers: Optional[Dict] = None) -> Union[Dict, List]:
         if model:
             self._check_model_task_match(model, task)
 
@@ -22,6 +22,9 @@ class NLP(BaseAPI):
         headers = {
             "Authorization": f"Bearer {self.api_token}"
         }
+
+        if extra_headers is not None:
+            headers.update(extra_headers)
 
         data = {
             "inputs": inputs
@@ -55,7 +58,7 @@ class NLP(BaseAPI):
         self.logger.debug(f"Response: {json.loads(response.content.decode('utf-8'))}.")
         raise HTTPServiceUnavailableException("The HTTP service is unavailable.")
 
-    def _query_in_df(self, df: DataFrame, column: Text, parameters: Optional[Dict] = None, options: Optional[Dict] = None, model: Optional[Text] = None, task: Optional[Text] = None) -> Union[Dict, List]:
+    def _query_in_df(self, df: DataFrame, column: Text, parameters: Optional[Dict] = None, options: Optional[Dict] = None, model: Optional[Text] = None, task: Optional[Text] = None, extra_headers: Optional[Dict] = None) -> Union[Dict, List]:
         return self._query(df[column].tolist(), parameters, options, model, task)
 
     def fill_mask(self, text: Union[Text, List], options: Optional[Dict] = None, model: Optional[Text] = None) -> List:
@@ -275,7 +278,16 @@ class NLP(BaseAPI):
         :param model: the model to use for the text generation task. If not provided, the recommended model from Hugging Face will be used.
         :return: a dict or a list of dicts containing the generated text.
         """
-        return self._query(text, parameters=parameters, options=options, model=model, task='text-generation')
+        return self._query(
+            text,
+            parameters=parameters,
+            options=options,
+            model=model,
+            task='text-generation',
+            extra_headers={
+                'Content-Type': 'application/json'
+            }
+        )
 
     def text_generation_in_df(self, df: DataFrame, column: Text, parameters: Optional[Dict] = None, options: Optional[Dict] = None, model: Optional[Text] = None) -> DataFrame:
         """
@@ -288,7 +300,17 @@ class NLP(BaseAPI):
         :param model: the model to use for the text generation task. If not provided, the recommended model from Hugging Face will be used.
         :return: a pandas DataFrame with the generated text. The generated text will be added as a new column called 'predictions' to the original DataFrame.
         """
-        predictions = self._query_in_df(df, column, parameters=parameters, options=options, model=model, task='text-generation')
+        predictions = self._query_in_df(
+            df,
+            column,
+            parameters=parameters,
+            options=options,
+            model=model,
+            task='text-generation',
+            extra_headers={
+                'Content-Type': 'application/json'
+            }
+        )
         df['predictions'] = [prediction[0]['generated_text'] for prediction in predictions]
         return df
 
@@ -356,7 +378,10 @@ class NLP(BaseAPI):
             parameters=parameters,
             options=options,
             model=model,
-            task='conversational'
+            task='conversational',
+            extra_headers={
+                'Content-Type': 'application/json'
+            }
         )
 
     def feature_extraction(self, text: Union[Text, List], options: Optional[Dict] = None, model: Optional[Text] = None) -> Union[Dict, List]:
